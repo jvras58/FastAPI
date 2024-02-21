@@ -1,0 +1,38 @@
+{
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.fontLigatures": true,
+    "editor.padding.top":15,
+    "editor.minimap.enabled": false,
+    "editor.rulers": [
+        88, 120
+    ],
+    "editor.formatOnSaveMode": "modifications",
+    "editor.formatOnSave": true,
+    "isort.importStrategy": "fromEnvironment",
+    "ruff.lint.run": "onSave",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.suggest.insertMode": "replace",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always",
+        "source.organizeImports": "always",
+    },
+    "editor.foldingImportsByDefault": true,
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.cache": true,
+        "**/.coverage": true,
+        "**/.coverage.*": true,
+        "**/.hypothesis": true,
+        "**/.mypy_cache": true,
+        "**/.nox": true,
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/.tox": true
+    },
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

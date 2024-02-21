@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "back-ceua"
+version = "0.1.0"
+description = "back-end ceua reformulado em python"
+authors = ["STI Labs <stilabs.sti@ufpe.br>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.103.2"
+uvicorn = "^0.23.2"
+pydantic = {extras = ["email"], version = "^2.4.2"}
+sqlalchemy = "^2.0.22"
+pydantic-settings = "^2.0.3"
+alembic = "^1.12.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+python-multipart = "^0.0.6"
+bcrypt = "^4.0.1"
+requests = "^2.31.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-cov = "^4.1.0"
+taskipy = "^1.12.0"
+blue = "^0.9.1"
+ruff = "^0.0.292"
+httpx = "^0.25.0"
+isort = "^5.12.0"
+commitizen = "^3.10.0"
+factory-boy = "^3.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+exclude = ['.venv', 'migrations']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+extend_skip = ['migrations']
+
+[tool.blue]
+extend-exclude = '(migrations/)'
+line_length = 88
+
+[tool.taskipy.tasks]
+lint = 'ruff . && blue --check . --diff'
+format = 'blue .  && isort .'
+run = 'uvicorn app.startup:app --host 0.0.0.0 --port 8000 --reload'
+diagrams = 'python generate_diagram.py'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=app -vv'
+post_test = 'coverage html'
+export_libs = 'poetry export -f requirements.txt --output requirements.txt'
