@@ -10,11 +10,11 @@ from app.api.transaction.router import router as transaction_router
 from app.api.user.router import router as user_router
 
 app = FastAPI(
-    title='FairPlay - API',
-    description='Applicação backend para o sistema de gestão da SEGEL - FAIRPLAY',
-    summary='Aplicação desenvolvida para a SEGEL - UFPE',
+    title='CEUA - API',
+    description='Applicação backend para o sistema da CEUA - UFPE',
+    summary='Aplicação desenvolvida para a CEUA - UFPE',
     version='0.0.1',
-    terms_of_service='http://www.ufpe.br/segel',
+    terms_of_service='https://www.ufpe.br/ceua',
     contact={
         'name': 'STILabs - STI/UFPE',
         'url': 'http://www.ufpe.br/sti',
