@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "back-ceua"
+name = "back-fastapi"
 version = "0.1.0"
-description = "back-end ceua reformulado em python"
-authors = ["STI Labs <stilabs.sti@ufpe.br>"]
+description = "back de estudos fastapi"
+authors = ["jvras <jvras@cin.ufpe.br>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
