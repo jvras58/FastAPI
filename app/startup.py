@@ -9,22 +9,7 @@ from app.api.role.router import router as role_router
 from app.api.transaction.router import router as transaction_router
 from app.api.user.router import router as user_router
 
-app = FastAPI(
-    title='CEUA - API',
-    description='Applicação backend para o sistema da CEUA - UFPE',
-    summary='Aplicação desenvolvida para a CEUA - UFPE',
-    version='0.0.1',
-    terms_of_service='https://www.ufpe.br/ceua',
-    contact={
-        'name': 'STILabs - STI/UFPE',
-        'url': 'http://www.ufpe.br/sti',
-        'email': 'stilabs.sti@ufpe.br',
-    },
-    license_info={
-        'name': 'Apache 2.0',
-        'url': 'https://www.apache.org/licenses/LICENSE-2.0.html',
-    },
-)
+app = FastAPI()
 
 
 # ----------------------------------
