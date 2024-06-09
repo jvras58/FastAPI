@@ -27,19 +27,6 @@ app.add_middleware(
 
 
 # ----------------------------------
-#  LOGGING MIDDLEWARE FOR DEBUGGING
-# ----------------------------------
-
-# FIXME: ainda é necessario corrigir pois quando ele esta descomentado ele trava o app
-# @app.middleware("http")
-# async def log_requests(request: Request, call_next):
-#     print(f"Incoming request: {request.method} {request.url}")
-#     print(f"Headers: {request.headers}")
-#     print(f"Body: {await request.body()}")
-#     response = await call_next(request)
-#     return response
-
-# ----------------------------------
 #  APP MIDDLEWARES
 # ----------------------------------
 app.add_middleware(AuthorizationMiddleware)
