@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://ceua-staging.ufpe.br/">Projeto de Estudos com FASTAPI</a>
+  <a href="#">Projeto de Estudos com FASTAPI</a>
 </h1>
 
 <p align="center">
