@@ -60,4 +60,4 @@ app.include_router(
 
 @app.get('/')
 def read_root():
-    return {'message': 'Wellcome to FairPlay API!'}
+    return {'message': 'Wellcome to API!'}
