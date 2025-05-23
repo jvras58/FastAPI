@@ -13,7 +13,7 @@ pydantic = {extras = ["email"], version = "^2.4.2"}
 sqlalchemy = "^2.0.22"
 pydantic-settings = "^2.0.3"
 alembic = "^1.12.0"
-python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+python-jose = {extras = ["cryptography"], version = "^3.4.0"}
 python-multipart = "^0.0.6"
 bcrypt = "^4.0.1"
 requests = "^2.31.0"
