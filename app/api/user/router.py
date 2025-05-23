@@ -21,12 +21,12 @@ from app.utils.exceptions import IntegrityValidationException, ObjectNotFoundExc
 router = APIRouter()
 user_controller = UserController()
 
-Session = Annotated[Session, Depends(get_session)]
+DbSession = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.post('/', status_code=201, response_model=UserPublic)
-async def create_new_user(user: UserSchema, request: Request, session: Session):
+async def create_new_user(user: UserSchema, request: Request, session: DbSession):
 
     new_user: User = User(**user.model_dump())
     new_user.audit_user_ip = request.client.host
@@ -46,7 +46,7 @@ async def create_new_user(user: UserSchema, request: Request, session: Session):
     status_code=HTTP_STATUS.HTTP_200_OK,
     response_model=UserPublic,
 )
-def get_user_by_id(user_id: int, db_session: Session, current_user: CurrentUser):
+def get_user_by_id(user_id: int, db_session: DbSession, current_user: CurrentUser):
     validate_transaction_access(db_session, current_user, op.OP_1040005.value)
 
     return user_controller.get(db_session, user_id)
@@ -54,7 +54,7 @@ def get_user_by_id(user_id: int, db_session: Session, current_user: CurrentUser)
 
 @router.get('/', response_model=UserList)
 def read_users(
-    db_session: Session, current_user: CurrentUser, skip: int = 0, limit: int = 100
+    db_session: DbSession, current_user: CurrentUser, skip: int = 0, limit: int = 100
 ):
     validate_transaction_access(db_session, current_user, op.OP_1040003.value)
     users: list[User] = user_controller.get_all(db_session, skip, limit)
@@ -66,7 +66,7 @@ def update_existing_user(
     user_id: int,
     user: UserSchema,
     request: Request,
-    db_session: Session,
+    db_session: DbSession,
     current_user: CurrentUser,
 ):
     validate_transaction_access(db_session, current_user, op.OP_1040002.value)
@@ -88,7 +88,7 @@ def update_existing_user(
 @router.delete('/{user_id}', response_model=SimpleMessageSchema)
 def delete_existing_user(
     user_id: int,
-    db_session: Session,
+    db_session: DbSession,
     current_user: CurrentUser,
 ):
     validate_transaction_access(db_session, current_user, op.OP_1040004.value)
@@ -102,6 +102,10 @@ def delete_existing_user(
 
 
 @router.get('/{user_id}/transactions', response_model=TransactionListSchema)
-def get_user_transactions(user_id: int, db_session: Session, current_user: CurrentUser):
+def get_user_transactions(
+    user_id: int,
+    db_session: DbSession,
+    current_user: CurrentUser,
+):
     validate_transaction_access(db_session, current_user, op.OP_1040006.value)
     return {'transactions': get_user_authorized_transactions(db_session, user_id)}

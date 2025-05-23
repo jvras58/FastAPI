@@ -1,5 +1,4 @@
-from datetime import datetime, timedelta
-
+from datetime import datetime, timedelta, timezone
 from bcrypt import checkpw, gensalt, hashpw
 from jose import jwt
 
@@ -8,7 +7,7 @@ from app.utils.settings import get_settings
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    current_time = datetime.utcnow()
+    current_time = datetime.now(timezone.utc)
     expire = current_time + timedelta(
         minutes=get_settings().SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES
     )
