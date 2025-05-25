@@ -84,6 +84,7 @@ FastAPI/
 │   ├── utils/                  # Funções utilitárias (segurança, configurações, etc.)
 │   ├── startup.py              # Inicialização da aplicação FastAPI
 ├── migrations/                 # Scripts de migração do banco de dados (Alembic)
+├── seeds/                      # Scripts de seeds para a aplicação
 ├── tests/                      # Testes automatizados (pytest)
 ├── .secrets/                   # Arquivos sensíveis (ex.: SECURITY_API_SECRET_KEY)
 ├── .env-semple                 # Modelo para arquivo de configuração .env
@@ -142,8 +143,13 @@ poetry install
 
 ### 4. Aplicar Migrações
 Execute as migrações para criar as tabelas no banco de dados:
+A) aplique as migrations existentes:
 ```bash
 alembic upgrade head
+```
+b) Suba os seedings de RBAC e de usuario admin
+```bash
+task setup_db
 ```
 
 ### 5. Executar a API
