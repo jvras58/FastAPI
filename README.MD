@@ -32,10 +32,10 @@ Este projeto está sendo desenvolvido com:
 
 ```bash
 # Clonar este repositório
-$ git clone git@github.com:jvras58/back-fastapi.git
+$ git clone project
 
 # Ir para o repositório
-$ cd back-fastapi  
+$ cd FastAPI
 
 # Criar o arquivo .env com os valores adequados ao ambiente. pasta .secrets precisa ter (TESTE_SECRET).
 $ cp .env-semple .env
@@ -54,6 +54,7 @@ $ task run
 ```
 
 - Endereço local: (http://localhost:8000)
+- Docs: http://localhost:8000/api/v1/docs ou http://localhost:8000/api/v1/redoc
 
 
 ---
