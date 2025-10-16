@@ -80,7 +80,9 @@ def test_read_users(client, token):
     with patch(
         'app.api.user.router.validate_transaction_access'
     ) as mocked_access_validation:
-        response = client.get('/users/', headers={'Authorization': f'Bearer {token}'})
+        response = client.get(
+            '/users/', headers={'Authorization': f'Bearer {token}'}
+        )
     assert response.status_code == 200
     assert 'users' in response.json()
     assert len(response.json()['users']) == 1
@@ -109,7 +111,9 @@ def test_read_users_with_users(client, user, token):
         'app.api.user.router.validate_transaction_access'
     ) as mocked_access_validation:
         user_schema = UserPublic.model_validate(user).model_dump()
-        response = client.get('/users/', headers={'Authorization': f'Bearer {token}'})
+        response = client.get(
+            '/users/', headers={'Authorization': f'Bearer {token}'}
+        )
     assert response.json() == {'users': [user_schema]}
     assert mocked_access_validation.assert_called_once
 
@@ -181,7 +185,9 @@ def test_delete_user_fail(client, user):
     assert mocked_access_validation.assert_called_once
 
 
-def test_get_user_transactions(client, user, token, role, transaction_10_plus_one):
+def test_get_user_transactions(
+    client, user, token, role, transaction_10_plus_one
+):
     # SETUP
     with patch(
         'app.api.assignment.router.validate_transaction_access'

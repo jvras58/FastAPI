@@ -31,7 +31,9 @@ def test_get_role_by_id(client, token, role_10):
         'app.api.role.router.validate_transaction_access'
     ) as mocked_access_validation:
 
-        response = client.get('/role/2', headers={'Authorization': f'Bearer {token}'})
+        response = client.get(
+            '/role/2', headers={'Authorization': f'Bearer {token}'}
+        )
 
         assert response.status_code == 200
         assert response.json()['id'] == 2
@@ -44,7 +46,9 @@ def test_get_all_roles(client, token, role_10):
     with patch(
         'app.api.role.router.validate_transaction_access'
     ) as mocked_access_validation:
-        response = client.get('/role/', headers={'Authorization': f'Bearer {token}'})
+        response = client.get(
+            '/role/', headers={'Authorization': f'Bearer {token}'}
+        )
 
         assert response.status_code == 200
         assert 'roles' in response.json()
@@ -116,7 +120,10 @@ def test_update_role(client, token):
     ) as mocked_access_validation:
         response = client.put(
             '/role/1',
-            json={'name': 'Role TEST2', 'description': 'description test updated'},
+            json={
+                'name': 'Role TEST2',
+                'description': 'description test updated',
+            },
             headers={'Authorization': f'Bearer {token}'},
         )
 
@@ -133,7 +140,10 @@ def test_update_none_existent_role(client, token):
     ) as mocked_access_validation:
         response = client.put(
             '/role/1000000',
-            json={'name': 'Role TEST2', 'description': 'description test updated'},
+            json={
+                'name': 'Role TEST2',
+                'description': 'description test updated',
+            },
             headers={'Authorization': f'Bearer {token}'},
         )
 

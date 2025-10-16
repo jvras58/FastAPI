@@ -45,7 +45,10 @@ def test_create_transaction_success(client, token):
 
         assert response.status_code == 201
         assert transaction_created['name'] == 'Trasação de teste'
-        assert transaction_created['description'] == 'Descrição da transação de teste'
+        assert (
+            transaction_created['description']
+            == 'Descrição da transação de teste'
+        )
         assert transaction_created['id'] == 1
         assert transaction_created['operation_code'] == 'TST0001'
         assert transaction_created['audit_created_at']
@@ -73,7 +76,9 @@ def test_create_transaction_IntegrityValidationException(
 
     transaction_created = response.json()
     assert response.status_code == 400
-    assert transaction_created['detail'] == 'Object TRANSACTION was not accepted'
+    assert (
+        transaction_created['detail'] == 'Object TRANSACTION was not accepted'
+    )
     assert mocked_access_validation.assert_called_once
 
 
@@ -145,7 +150,9 @@ def test_get_transaction_by_op_code(client, transaction_10_plus_one, token):
         assert response.status_code == 200
         assert 'transactions' in response.json()
         assert len(response.json()['transactions']) == 1
-        assert response.json()['transactions'][0]['operation_code'] == 'TEST666'
+        assert (
+            response.json()['transactions'][0]['operation_code'] == 'TEST666'
+        )
         assert mocked_access_validation.assert_called_once
 
 

@@ -17,7 +17,9 @@ def test_db_structure_assignment_entity(session, user, role):
     session.add(new_assignment)
     session.commit()
 
-    assignment = session.scalar(select(Assignment).where(Assignment.role_id == 1))
+    assignment = session.scalar(
+        select(Assignment).where(Assignment.role_id == 1)
+    )
 
     assert assignment.role_id == 1
     assert assignment.user_id == 1
@@ -125,7 +127,9 @@ def test_create_two_equals_assignment_to_a_user(client, token, user, role):
         )
 
         assert response.status_code == 400
-        assert response.json()['detail'] == 'Object ASSIGNMENT was not accepted'
+        assert (
+            response.json()['detail'] == 'Object ASSIGNMENT was not accepted'
+        )
         assert mocked_access_validation.assert_called
 
 
@@ -177,7 +181,9 @@ def test_update_assignment(client, token, assignment_10, role_10):
         assert mocked_access_validation.assert_called
 
 
-def test_update_assignment_integrity_error(client, token, assignment_10, role_10):
+def test_update_assignment_integrity_error(
+    client, token, assignment_10, role_10
+):
     with patch(
         'app.api.assignment.router.validate_transaction_access'
     ) as mocked_access_validation:
@@ -198,7 +204,9 @@ def test_update_assignment_integrity_error(client, token, assignment_10, role_10
         )
 
         assert response.status_code == 400
-        assert response.json()['detail'] == 'Object ASSIGNMENT was not accepted'
+        assert (
+            response.json()['detail'] == 'Object ASSIGNMENT was not accepted'
+        )
         assert mocked_access_validation.assert_called
 
 

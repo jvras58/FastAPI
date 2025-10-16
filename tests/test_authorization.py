@@ -86,7 +86,10 @@ def test_create_two_equals_athorization(client, token, role, trasaction):
         )
 
         assert response.status_code == 400
-        assert response.json()['detail'] == 'Object AUTHORIZATION was not accepted'
+        assert (
+            response.json()['detail']
+            == 'Object AUTHORIZATION was not accepted'
+        )
         assert mocked_access_validation.assert_called_once
 
 
@@ -132,7 +135,9 @@ def test_get_authorization_by_id_not_found(client, token):
         )
 
         assert response.status_code == 404
-        assert response.json()['detail'] == 'Object AUTHORIZATION was not found'
+        assert (
+            response.json()['detail'] == 'Object AUTHORIZATION was not found'
+        )
         assert mocked_access_validation.assert_called_once
 
 
@@ -158,7 +163,9 @@ def test_delete_authorization_not_found(client, token):
         )
 
         assert response.status_code == 404
-        assert response.json()['detail'] == 'Object AUTHORIZATION was not found'
+        assert (
+            response.json()['detail'] == 'Object AUTHORIZATION was not found'
+        )
         assert mocked_access_validation.assert_called_once
 
 
