@@ -146,8 +146,8 @@ Siga os passos abaixo para configurar e executar o projeto localmente.
 
 ### 1. Clonar o Repositório
 ```bash
-git clone https://github.com/jvras58/fastapi-crewai
-cd fastapi-crewai
+git clone https://github.com/jvras58/FastAPI
+cd FastAPI
 ```
 
 ## 2.1 Montando o ambiente
