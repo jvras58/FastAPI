@@ -1,63 +1,69 @@
-[tool.poetry]
-name = "FastAPI-CRUD"
-version = "0.1.0"
+[project]
+name = "FastAPI"
+version = "1.0.0"
 description = "Basic CRUD API with FastAPI, SQLAlchemy, and Alembic"
-authors = ["jvras <jvras@cin.ufpe.br>"]
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.16.5",
+    "bcrypt>=4.3.0",
+    "fastapi>=0.116.1",
+    "psycopg2-binary>=2.9.0",
+    "pydantic-settings>=2.10.1",
+    "pydantic[email]>=2.11.9",
+    "python-jose[cryptography]>=3.5.0",
+    "python-multipart>=0.0.20",
+    "requests>=2.32.5",
+    "sqlalchemy>=2.0.43",
+    "uvicorn>=0.35.0",
+]
+[tool.setuptools.packages.find]
+where = ["app"]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-fastapi = "^0.115.12"
-uvicorn = "^0.34.2"
-pydantic = {extras = ["email"], version = "^2.11.5"}
-sqlalchemy = "^2.0.41"
-pydantic-settings = "^2.9.1"
-alembic = "^1.16.1"
-python-jose = {extras = ["cryptography"], version = "^3.4.0"}
-python-multipart = "^0.0.20"
-bcrypt = "^4.3.0"
-requests = "^2.32.3"
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-pytest-cov = "^6.1.1"
-taskipy = "^1.14.1"
-blue = "^0.9.1"
-ruff = "^0.11.11"
-httpx = "^0.28.1"
-isort = "^6.0.1"
-commitizen = "^4.8.2"
-factory-boy = "^3.3.3"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.ruff]
-line-length = 88
-exclude = ['.venv', 'migrations']
+[dependency-groups]
+dev = [
+    "blue>=0.9.1",
+    "commitizen>=4.9.1",
+    "factory-boy>=3.3.3",
+    "httpx>=0.28.1",
+    "isort>=6.0.1",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.13.0",
+    "taskipy>=1.14.1",
+]
+# uv run (commands) sample = uv run pytest -s -x --cov=app -vv
+[tool.taskipy.tasks]
+lint = "ruff check . && blue --check . --diff"
+format = "blue . && isort ."
+run = "uvicorn app.startup:app --host 0.0.0.0 --port 8000 --reload"
+pre_test = "task lint"
+test = "pytest -s -x --cov=app -vv"
+post_test = "coverage html"
+export_libs = "uv pip freeze > requirements.txt"
+migrate = "alembic upgrade head"
+seed_super_user = "python -m seeds.seed_super_user"
+seed_transactions = "python -m seeds.seed_transactions"
+setup_db = "alembic upgrade head && python -m seeds.seed_transactions && python -m seeds.seed_super_user"
 
 [tool.isort]
 profile = "black"
 line_length = 88
-extend_skip = ['migrations']
+extend_skip = ["migrations"]
 
-[tool.blue]
-extend-exclude = '(migrations/)'
-line_length = 88
+[tool.uv]
+package = true
 
-[tool.taskipy.tasks]
-lint = 'ruff check . && blue --check . --diff'
-format = 'blue .  && isort .'
-run = 'uvicorn app.startup:app --host 0.0.0.0 --port 8000 --reload'
-diagrams = 'python generate_diagram.py'
-pre_test = 'task lint'
-test = 'pytest -s -x --cov=app -vv'
-post_test = 'coverage html'
-export_libs = 'poetry export -f requirements.txt --output requirements.txt'
-migrate = 'alembic upgrade head'
-seed_super_user = 'python -m seeds.seed_super_user'
-seed_transactions = 'python -m seeds.seed_transactions'
-setup_db = 'alembic upgrade head && python -m seeds.seed_transactions && python -m seeds.seed_super_user'
+[tool.pylsp-mypy]
+exclude = ["tests/"]
+
+[tool.pyright]
+exclude = ["tests/"]
+
+[tool.ruff]
+line-length = 88
+exclude = [".venv", "migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "SIM"]
+ignore = ["UP046"]  # Ignore Generic subclass rule for compatibility with blue formatter
