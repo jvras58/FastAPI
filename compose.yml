@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fastapi-crewai-postgres
+    environment:
+      POSTGRES_DB: fastapi_crewai
+      POSTGRES_USER: fastapi_user
+      POSTGRES_PASSWORD: fastapi_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fastapi_user -d fastapi_crewai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fastapi-network
+
+  app:
+    build: .
+    container_name: fastapi-crewai-app
+    environment:
+      DB_URL: "postgresql://fastapi_user:fastapi_password@postgres:5432/fastapi_crewai"
+      SECURITY_ALGORITHM: "HS256"
+      SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      GROQ_API_KEY: "${GROQ_API_KEY}"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - fastapi-network
+    volumes:
+      - ./migrations:/app/migrations:ro
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  fastapi-network:
+    driver: bridge
