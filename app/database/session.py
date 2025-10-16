@@ -1,3 +1,5 @@
+"""Database session management."""
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
@@ -7,5 +9,6 @@ engine = create_engine(get_settings().DB_URL)
 
 
 def get_session():
+    """Provide a database session."""
     with Session(engine) as session:
         yield session

@@ -1,3 +1,4 @@
+"""Model for authorization of a role (Role) to a transaction."""
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Index
@@ -12,7 +13,8 @@ if TYPE_CHECKING:
 
 class Authorization(AbstractBaseModel):
     """
-    Represetna a autorização de um papel (Role) a uma operação (Transaction)
+    Represents the authorization of a role (Role) to a transaction (Transaction)
+    in the system.
     """
 
     __tablename__ = 'authorization'

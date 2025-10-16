@@ -1,3 +1,4 @@
+"""Settings management for the application using Pydantic."""
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -5,17 +6,21 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     """
-    Classe que representa as configurações setadas no .env da aplicação.
+    Class that represents the settings set in the application's .env.
     """
 
     model_config = SettingsConfigDict(
-        env_file='.env', env_file_encode='utf-8', secrets_dir='.secrets'
+        env_file='.env',
+        env_file_encoding='utf-8',
+        secrets_dir='.secrets',
+        case_sensitive=True,
+        env_ignore_empty=True,
     )
 
     DB_URL: str
-
-    SECURITY_ALGORITHM: str
-    SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES: int
+    GROQ_API_KEY: str
+    SECURITY_ALGORITHM: str = 'HS256'
+    SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # SECRETS
     SECURITY_API_SECRET_KEY: str
@@ -23,4 +28,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    """Get the application settings, cached for performance."""
+    return Settings()  # type: ignore[call-arg]

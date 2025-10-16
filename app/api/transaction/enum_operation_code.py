@@ -1,7 +1,10 @@
+"""Enumeration of operation codes for transactions in the system."""
 from enum import Enum
 
 
 class EnumOperationCode(Enum):
+    """Enumeration of operation codes for transactions in the system."""
+
     # --------------------- Assignment ---------------------
     OP_1010001 = '1010001'   # Assignment - Create
     OP_1010002 = '1010002'   # Assignment - Update
@@ -31,5 +34,7 @@ class EnumOperationCode(Enum):
     OP_1050001 = '1050001'   # Role - Create
     OP_1050002 = '1050002'   # Role - Update
     OP_1050003 = '1050003'   # Role - List
-    OP_1050004 = '1050004'   # Role - Delete
-    OP_1050005 = '1050005'   # Role - View
+    OP_1050004 = '1050004'  # Role - Delete
+    OP_1050005 = '1050005'  # Role - View
+    # --------------------- Text Processing - IA ---------------------
+    OP_2000001 = '2000001'  # Text Processing - Execute (CREATE)

@@ -1,3 +1,4 @@
+"""Controller for handling authorization logic."""
 from sqlalchemy import Select, and_, select
 
 from app.api.user.controller import UserController
@@ -10,7 +11,7 @@ from app.models.user import User
 from app.utils.exceptions import (
     AmbiguousAuthorizationException,
     CredentialsValidationException,
-    IllegalAccessExcetion,
+    IllegalAccessException,
 )
 
 user_controller = UserController()
@@ -19,26 +20,38 @@ user_controller = UserController()
 def validate_transaction_access(
     db_session: Session, current_user: User, op_code: str
 ) -> None:
+    """Validate if the current user has access to the specified operation code."""
     if not current_user:
         raise CredentialsValidationException()
 
-    trasactions = get_user_authorized_transactions(db_session, current_user.id, op_code)
-    if not trasactions:
-        raise IllegalAccessExcetion(current_user.id, op_code)
+    transactions = get_user_authorized_transactions(
+        db_session, current_user.id, op_code
+    )
+    if not transactions:
+        raise IllegalAccessException(current_user.id, op_code)
 
-    if len(trasactions) > 1:
+    if len(transactions) > 1:
         raise AmbiguousAuthorizationException(current_user.id, op_code)
 
-    if trasactions[0].operation_code != op_code:
-        raise IllegalAccessExcetion(current_user.id, trasactions[0].operation_code)
+    if transactions[0].operation_code != op_code:
+        raise IllegalAccessException(
+            current_user.id, transactions[0].operation_code
+        )
 
 
 def get_user_authorized_transactions(
-    db_session: Session, user_id: int, op_code: str = None
+    db_session: Session, user_id: int, op_code: str | None = None
 ) -> list[Transaction]:
-
+    """
+    Retrieve transactions authorized for a specific user,
+    optionally filtered by operation code.
+    """
     query: Select = (
-        select(Transaction).join(Authorization).join(Role).join(Assignment).join(User)
+        select(Transaction)
+        .join(Authorization)
+        .join(Role)
+        .join(Assignment)
+        .join(User)
     )
 
     criteria_and = []
@@ -49,5 +62,5 @@ def get_user_authorized_transactions(
 
     query = query.filter(and_(*criteria_and))
 
-    trasactions: list[Transaction] = db_session.scalars(query).all()
-    return trasactions
+    transactions: list[Transaction] = list(db_session.scalars(query).all())
+    return transactions

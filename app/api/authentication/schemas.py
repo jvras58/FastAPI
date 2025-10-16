@@ -1,9 +1,10 @@
+"""Authentication schemas."""
 from pydantic import BaseModel
 
 
 class AccessToken(BaseModel):
     """
-    Representao o token JWT
+    Represents a JWT token response.
     """
 
     access_token: str
@@ -12,7 +13,7 @@ class AccessToken(BaseModel):
 
 class TokenData(BaseModel):
     """
-    Representa os dados do usuário logado dentro do token JWT (access_token).
+    Represents the logged user data within the JWT token (access_token).
     """
 
     username: str | None = None

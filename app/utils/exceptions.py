@@ -1,9 +1,10 @@
+'"""Custom exceptions for the application."""'
 from fastapi import HTTPException, status
 
 
 class CredentialsValidationException(HTTPException):
     """
-    Representa um erro de validação de credencial do usuário.
+    Represents a user credentials validation error.
     """
 
     def __init__(self):
@@ -16,7 +17,7 @@ class CredentialsValidationException(HTTPException):
 
 class IncorrectCredentialException(Exception):
     """
-    Representao o erro de Login e Senha inválidos.
+    Represents the error of invalid email and password.
     """
 
     def __init__(self):
@@ -25,7 +26,7 @@ class IncorrectCredentialException(Exception):
 
 class ObjectAlreadyExistException(Exception):
     """
-    Representa um erro quando se tentar cadastrar um usuário com o mesmo username.
+    Represents an error when trying to register a user with the same username.
     """
 
     def __init__(self, obj_type: str, obj_id: str):
@@ -34,7 +35,7 @@ class ObjectAlreadyExistException(Exception):
 
 class ObjectNotFoundException(Exception):
     """
-    Representa um erro quando o usuário com determinado ID não é encontrado.
+    Represents an error when the user with a given ID is not found.
     """
 
     def __init__(self, obj_type: str, obj_id: str):
@@ -43,7 +44,7 @@ class ObjectNotFoundException(Exception):
 
 class ValueRequiredException(Exception):
     """
-    Representa um erro é detectada a ausencia de um valor obrigatório.
+    Represents an error when a required value is missing.
     """
 
     def __init__(self, field_name: str):
@@ -52,16 +53,16 @@ class ValueRequiredException(Exception):
 
 class IntegrityValidationException(Exception):
     """
-    Representa um erro de validação de integridade de dados.
+    Represents an error when data integrity validation fails.
     """
 
     def __init__(self, exc_msg: str):
         super().__init__(exc_msg)
 
 
-class IllegalAccessExcetion(HTTPException):
+class IllegalAccessException(HTTPException):
     """
-    Representa um erro de acesso ilegal.
+    Represents an illegal access error.
     """
 
     def __init__(self, user_id: int, op_code: str):
@@ -74,7 +75,7 @@ class IllegalAccessExcetion(HTTPException):
 
 class AmbiguousAuthorizationException(HTTPException):
     """
-    Representa um erro de definição ambigoa de autorização.
+    Represents an error of ambiguous authorization definition.
     """
 
     def __init__(self, user_id: int, op_code: str):
@@ -91,8 +92,10 @@ class AmbiguousAuthorizationException(HTTPException):
 
 class ObjectConflitException(Exception):
     """
-    Representa um erro quando um objeto entra em conflito com outro
+    Represents an error when an object conflicts with another existing object.
     """
 
     def __init__(self, obj_type: str, obj_id: str):
-        super().__init__(f'{obj_type} with ID [{obj_id}] conflict availability')
+        super().__init__(
+            f'{obj_type} with ID [{obj_id}] conflict availability'
+        )

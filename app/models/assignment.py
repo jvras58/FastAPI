@@ -1,3 +1,4 @@
+"""Model for Assignment (Designações) of users to roles."""
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Index
@@ -12,8 +13,8 @@ if TYPE_CHECKING:
 
 class Assignment(AbstractBaseModel):
     """
-    Representa a tabela de Assignment (Designações) de usuários.
-    Essas designações determinam qual o papel (Role) o usuário assume para o sistema.
+    Represents the Assignment (Designações) table for users.
+    These assignments determine which role (Role) the user assumes in the system.
     """
 
     __tablename__ = 'assignment'
@@ -26,7 +27,11 @@ class Assignment(AbstractBaseModel):
         ForeignKey('role.id'), name='role_id', nullable=False
     )
 
-    user: Mapped['User'] = relationship(back_populates='assignments', lazy='subquery')
-    role: Mapped['Role'] = relationship(back_populates='assignments', lazy='subquery')
+    user: Mapped['User'] = relationship(
+        back_populates='assignments', lazy='subquery'
+    )
+    role: Mapped['Role'] = relationship(
+        back_populates='assignments', lazy='subquery'
+    )
 
     __table_args__ = (Index('idx_user_role', user_id, role_id, unique=True),)

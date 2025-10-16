@@ -1,3 +1,4 @@
+"""Schemas for the Assignment entity."""
 from pydantic import BaseModel
 
 from app.utils.base_schemas import BaseAuditDTOSchema, BaseAuditModelSchema
@@ -5,7 +6,7 @@ from app.utils.base_schemas import BaseAuditDTOSchema, BaseAuditModelSchema
 
 class AssignmentDTOSchema(BaseAuditDTOSchema):
     """
-    Representa uma Designação de um usuário para um papel.
+    Represents an Assignment of a user to a role.
     """
 
     user_id: int
@@ -13,8 +14,12 @@ class AssignmentDTOSchema(BaseAuditDTOSchema):
 
 
 class AssignmentSchema(AssignmentDTOSchema, BaseAuditModelSchema):
+    """Schema representing an Assignment with audit fields."""
+
     id: int
 
 
 class AssignmentListSchema(BaseModel):
+    """Schema representing a list of Assignments."""
+
     assignments: list[AssignmentSchema]

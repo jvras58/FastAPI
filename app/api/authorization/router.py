@@ -1,3 +1,4 @@
+"""Authorization Router Module."""
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -16,13 +17,17 @@ from app.database.session import get_session
 from app.models.authorization import Authorization
 from app.models.user import User
 from app.utils.base_schemas import SimpleMessageSchema
-from app.utils.exceptions import IntegrityValidationException, ObjectNotFoundException
+from app.utils.client_ip import get_client_ip
+from app.utils.exceptions import (
+    IntegrityValidationException,
+    ObjectNotFoundException,
+)
 from app.utils.generic_controller import GenericController
 
 router = APIRouter()
 controller = GenericController(Authorization)
 
-Session = Annotated[Session, Depends(get_session)]
+SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
@@ -33,14 +38,15 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 )
 def create_authorization(
     authorization: AuthorizationDTOSchema,
-    db_session: Session,
+    db_session: SessionDep,
     current_user: CurrentUser,
     request: Request,
 ):
+    """Create a new authorization entry."""
     validate_transaction_access(db_session, current_user, op.OP_1020001.value)
     new_authorization = Authorization(**authorization.model_dump())
 
-    new_authorization.audit_user_ip = request.client.host
+    new_authorization.audit_user_ip = get_client_ip(request)
     new_authorization.audit_user_login = current_user.username
 
     try:
@@ -55,11 +61,17 @@ def create_authorization(
 
 
 @router.get(
-    '/', status_code=HTTP_STATUS.HTTP_200_OK, response_model=AuthorizationListSchema
+    '/',
+    status_code=HTTP_STATUS.HTTP_200_OK,
+    response_model=AuthorizationListSchema,
 )
 def get_all_authorizations(
-    db_session: Session, current_user: CurrentUser, skip: int = 0, limit: int = 100
+    db_session: SessionDep,
+    current_user: CurrentUser,
+    skip: int = 0,
+    limit: int = 100,
 ):
+    """Get all authorizations with pagination."""
     validate_transaction_access(db_session, current_user, op.OP_1020003.value)
     authorizations = controller.get_all(db_session, skip, limit)
     return {'authorizations': authorizations}
@@ -71,9 +83,9 @@ def get_all_authorizations(
     response_model=AuthorizationSchema,
 )
 def get_authorization_by_id(
-    autorization_id: int, db_session: Session, current_user: CurrentUser
+    autorization_id: int, db_session: SessionDep, current_user: CurrentUser
 ):
-
+    """Get authorization by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1020005.value)
 
     try:
@@ -93,8 +105,9 @@ def get_authorization_by_id(
     response_model=SimpleMessageSchema,
 )
 def delete_authorization(
-    autorization_id: int, db_session: Session, current_user: CurrentUser
+    autorization_id: int, db_session: SessionDep, current_user: CurrentUser
 ):
+    """Delete an authorization by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1020004.value)
 
     try:
@@ -116,16 +129,18 @@ def delete_authorization(
 def update_authorization(
     autorization_id: int,
     authorization: AuthorizationDTOSchema,
-    db_session: Session,
+    db_session: SessionDep,
     request: Request,
     current_user: CurrentUser,
 ):
-
+    """Update an existing authorization."""
     validate_transaction_access(db_session, current_user, op.OP_1020002.value)
 
-    new_authorization: Authorization = Authorization(**authorization.model_dump())
+    new_authorization: Authorization = Authorization(
+        **authorization.model_dump()
+    )
     new_authorization.id = autorization_id
-    new_authorization.audit_user_ip = request.client.host
+    new_authorization.audit_user_ip = get_client_ip(request)
     new_authorization.audit_user_login = current_user.username
 
     try:

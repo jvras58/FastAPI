@@ -1,3 +1,4 @@
+"""Authorization Schemas"""
 from pydantic import BaseModel
 
 from app.utils.base_schemas import BaseAuditDTOSchema, BaseAuditModelSchema
@@ -5,7 +6,7 @@ from app.utils.base_schemas import BaseAuditDTOSchema, BaseAuditModelSchema
 
 class AuthorizationDTOSchema(BaseAuditDTOSchema):
     """
-    Schema de Autorização
+    Authorization Schema
     """
 
     role_id: int
@@ -14,7 +15,7 @@ class AuthorizationDTOSchema(BaseAuditDTOSchema):
 
 class AuthorizationSchema(AuthorizationDTOSchema, BaseAuditModelSchema):
     """
-    Schema de Autorização
+    Authorization Schema
     """
 
     id: int
@@ -22,7 +23,7 @@ class AuthorizationSchema(AuthorizationDTOSchema, BaseAuditModelSchema):
 
 class AuthorizationListSchema(BaseModel):
     """
-    Schema de Autorização
+    Authorization List Schema
     """
 
     authorizations: list[AuthorizationSchema]

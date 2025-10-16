@@ -1,3 +1,4 @@
+"""Assignment router module."""
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -16,13 +17,17 @@ from app.database.session import get_session
 from app.models.assignment import Assignment
 from app.models.user import User
 from app.utils.base_schemas import SimpleMessageSchema
-from app.utils.exceptions import IntegrityValidationException, ObjectNotFoundException
+from app.utils.client_ip import get_client_ip
+from app.utils.exceptions import (
+    IntegrityValidationException,
+    ObjectNotFoundException,
+)
 from app.utils.generic_controller import GenericController
 
 router = APIRouter()
 controller = GenericController(Assignment)
 
-Session = Annotated[Session, Depends(get_session)]
+SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
@@ -32,37 +37,47 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
     response_model=AssignmentSchema,
 )
 def get_assignment_by_id(
-    assignment_id: int, db_session: Session, current_user: CurrentUser
+    assignment_id: int, db_session: SessionDep, current_user: CurrentUser
 ):
+    """Get assignment by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1010005.value)
 
     return controller.get(db_session, assignment_id)
 
 
 @router.get(
-    '/', status_code=HTTP_STATUS.HTTP_200_OK, response_model=AssignmentListSchema
+    '/',
+    status_code=HTTP_STATUS.HTTP_200_OK,
+    response_model=AssignmentListSchema,
 )
 def get_all_assignments(
-    db_session: Session, current_user: CurrentUser, skip: int = 0, limit: int = 100
+    db_session: SessionDep,
+    current_user: CurrentUser,
+    skip: int = 0,
+    limit: int = 100,
 ):
+    """Get all assignments with pagination."""
     validate_transaction_access(db_session, current_user, op.OP_1010003.value)
     assignments = controller.get_all(db_session, skip, limit)
     return {'assignments': assignments}
 
 
 @router.post(
-    '/', status_code=HTTP_STATUS.HTTP_201_CREATED, response_model=AssignmentSchema
+    '/',
+    status_code=HTTP_STATUS.HTTP_201_CREATED,
+    response_model=AssignmentSchema,
 )
 def create_assignment(
     assignment: AssignmentDTOSchema,
-    db_session: Session,
+    db_session: SessionDep,
     current_user: CurrentUser,
     request: Request,
 ):
+    """Create a new assignment."""
     validate_transaction_access(db_session, current_user, op.OP_1010001.value)
 
     new_assignment = Assignment(**assignment.model_dump())
-    new_assignment.audit_user_ip = request.client.host
+    new_assignment.audit_user_ip = get_client_ip(request)
     new_assignment.audit_user_login = current_user.username
 
     try:
@@ -84,15 +99,16 @@ def create_assignment(
 def update_assignment(
     assignment_id: int,
     assignment: AssignmentDTOSchema,
-    db_session: Session,
+    db_session: SessionDep,
     current_user: CurrentUser,
     request: Request,
 ):
+    """Update an existing assignment."""
     validate_transaction_access(db_session, current_user, op.OP_1010002.value)
 
     new_assignment: Assignment = Assignment(**assignment.model_dump())
     new_assignment.id = assignment_id
-    new_assignment.audit_user_ip = request.client.host
+    new_assignment.audit_user_ip = get_client_ip(request)
     new_assignment.audit_user_login = current_user.username
 
     try:
@@ -112,8 +128,9 @@ def update_assignment(
     response_model=SimpleMessageSchema,
 )
 def delete_assignment(
-    assignment_id: int, db_session: Session, current_user: CurrentUser
+    assignment_id: int, db_session: SessionDep, current_user: CurrentUser
 ):
+    """Delete an assignment."""
     validate_transaction_access(db_session, current_user, op.OP_1010004.value)
 
     try:
