@@ -47,7 +47,7 @@ sequenceDiagram
 POST /auth/token
 Content-Type: application/x-www-form-urlencoded
 
-username=seu_usuario&password=sua_senha
+username=admin&password=senha123
 ```
 
 ### **2. Usando cURL**
@@ -336,7 +336,7 @@ curl -X POST "http://localhost:8000/users/" \
     "password": "senha123"
   }'
 
-# ⚠️ IMPORTANTE: Usuário criado não tem NENHUMA permissão
+# ⚠️ IMPORTANTE: Usuário criado não tem nenhuma permissão
 # Um admin precisa atribuir um Role via Assignment
 ```
 
