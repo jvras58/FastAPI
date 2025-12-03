@@ -114,6 +114,15 @@ Para informações técnicas detalhadas sobre o projeto, consulte os documentos 
 ### 📊 **Modelo de Entidades e Relacionamentos**
 - **Diagrama ER**: [DOCS/MODELS.png](DOCS/MODELS.png) - Visualização completa das entidades e seus relacionamentos no banco de dados.
 
+### 🔐 **Sistema de Autenticação (JWT)**
+- **Guia Completo**: [DOCS/AUTHENTICATION.MD](DOCS/AUTHENTICATION.MD) - Documentação detalhada sobre:
+  - Fluxo de autenticação com JWT
+  - Como obter e usar tokens de acesso
+  - Estrutura e validação de tokens JWT
+  - Segurança de senhas com BCrypt
+  - Integração com o sistema de autorização
+  - Cenários práticos e exemplos de código
+
 ### 🔐 **Sistema de Permissões (RBAC)**
 - **Guia Completo**: [DOCS/PERMISSIONS.MD](DOCS/PERMISSIONS.MD) - Documentação detalhada sobre:
   - Como um usuário novo ganha permissões
