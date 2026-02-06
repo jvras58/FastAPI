@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting FastAPI CrewAI Application..."
+echo "🚀 Starting FastAPI Application..."
 
 # Função para aguardar o PostgreSQL (se estiver usando PostgreSQL)
 wait_for_postgres() {

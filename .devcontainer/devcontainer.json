@@ -1,5 +1,5 @@
 {
-    "name": "Dev Container - CrewAI",
+    "name": "Dev Container - FastAPI Project",
     "dockerComposeFile": "compose.yml",
     "service": "python_project",
     "workspaceFolder": "/workspace",
