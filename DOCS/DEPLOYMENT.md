@@ -1,21 +1,28 @@
-# FastAPI CrewAI - Deployment em Produção
+# FastAPI - Deployment em Produção
 
 ## Pré-requisitos
 
 - Docker
 - Docker Compose
-- Uma chave da API do GROQ
+- **Configuração de Segredos**: Crie a pasta `.secrets` no diretório raiz e adicione o arquivo `SECURITY_API_SECRET_KEY` com a chave secreta para JWT (gerada de forma segura, ex.: openssl rand -hex 32).
+- **Variáveis de Ambiente**: As seguintes variáveis devem ser configuradas no arquivo `.env.prod`:
+  - `DB_URL`: URL de conexão com o banco de dados PostgreSQL.
+  - `GROQ_API_KEY`: Chave da API Groq (obrigatória).
+  - `SECURITY_ALGORITHM`: Algoritmo para JWT (padrão: HS256).
+  - `SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES`: Tempo de expiração do token (padrão: 30 minutos).
+  - `SWAGGER_DOCS_ROUTE`: Rota para a documentação Swagger (deixe vazio para desabilitar em produção).
+  - `SWAGGER_REDOCS_ROUTE`: Rota para a documentação Redoc (deixe vazio para desabilitar em produção).
 
 ## Setup de Produção
 
 1. **Clone o repositório e navegue até a pasta:**
    ```bash
-   cd fastapi-crewai
+   cd fastapi
    ```
 
 2. **Crie o arquivo de variáveis de ambiente:**
    ```bash
-   cp .env-prod.example .env.prod
+   cp .env-prod.semple .env.prod
    ```
 
 3. **Edite o arquivo `.env.prod` com suas configurações:**
@@ -24,7 +31,6 @@
    ```
    
    Certifique-se de atualizar:
-   - `GROQ_API_KEY`: Sua chave da API do GROQ
    - Opcionalmente, as credenciais do PostgreSQL se desejar alterá-las
 
 4. **Inicie os serviços:**
@@ -50,8 +56,8 @@
 
 6. **Acesse a aplicação:**
    - API: http://localhost:8000
-   - Documentação Swagger: http://localhost:8000/api/v1/docs
-   - Redoc: http://localhost:8000/api/v1/redoc
+   - Documentação Swagger: http://localhost:8000{SWAGGER_DOCS_ROUTE} (configurado via .env)
+   - Redoc: http://localhost:8000{SWAGGER_REDOCS_ROUTE} (configurado via .env)
 
 ## Comandos Úteis
 
@@ -78,13 +84,13 @@ docker compose logs -f app
 docker compose exec app alembic upgrade head
 
 # Acessar o PostgreSQL diretamente
-docker compose exec postgres psql -U fastapi_user -d fastapi_crewai
+docker compose exec postgres psql -U fastapi_user -d fastapi
 
 # Backup do banco
-docker compose exec postgres pg_dump -U fastapi_user fastapi_crewai > backup.sql
+docker compose exec postgres pg_dump -U fastapi_user fastapi > backup.sql
 
 # Restaurar backup
-docker compose exec -T postgres psql -U fastapi_user -d fastapi_crewai < backup.sql
+docker compose exec -T postgres psql -U fastapi_user -d fastapi < backup.sql
 ```
 
 ## Estrutura dos Serviços
