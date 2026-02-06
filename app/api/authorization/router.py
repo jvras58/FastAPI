@@ -27,7 +27,7 @@ from app.utils.logging import get_logger
 
 router = APIRouter()
 controller = GenericController(Authorization)
-logger = get_logger(__name__)
+logger = get_logger("authorization.router")
 
 SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]

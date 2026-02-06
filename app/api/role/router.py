@@ -23,7 +23,7 @@ from app.utils.logging import get_logger
 
 router = APIRouter()
 role_controller = GenericController(Role)
-logger = get_logger(__name__)
+logger = get_logger("role.router")
 
 SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
