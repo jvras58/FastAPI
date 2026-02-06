@@ -23,9 +23,11 @@ from app.utils.exceptions import (
     ObjectNotFoundException,
 )
 from app.utils.generic_controller import GenericController
+from app.utils.logging import get_logger
 
 router = APIRouter()
 controller = GenericController(Assignment)
+logger = get_logger(__name__)
 
 SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
@@ -41,6 +43,12 @@ def get_assignment_by_id(
 ):
     """Get assignment by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1010005.value)
+
+    logger.info(
+        "Fetch assignment id=%s by user=%s",
+        assignment_id,
+        current_user.username,
+    )
 
     return controller.get(db_session, assignment_id)
 
@@ -58,6 +66,12 @@ def get_all_assignments(
 ):
     """Get all assignments with pagination."""
     validate_transaction_access(db_session, current_user, op.OP_1010003.value)
+    logger.info(
+        "List assignments skip=%s limit=%s by user=%s",
+        skip,
+        limit,
+        current_user.username,
+    )
     assignments = controller.get_all(db_session, skip, limit)
     return {'assignments': assignments}
 
@@ -76,13 +90,23 @@ def create_assignment(
     """Create a new assignment."""
     validate_transaction_access(db_session, current_user, op.OP_1010001.value)
 
+    logger.info(
+        "Create assignment for user_id=%s role_id=%s by user=%s ip=%s",
+        assignment.user_id,
+        assignment.role_id,
+        current_user.username,
+        get_client_ip(request),
+    )
+
     new_assignment = Assignment(**assignment.model_dump())
     new_assignment.audit_user_ip = get_client_ip(request)
     new_assignment.audit_user_login = current_user.username
 
     try:
         new_assignment = controller.save(db_session, new_assignment)
+        logger.info("Assignment created id=%s", new_assignment.id)
     except IntegrityValidationException as ex:
+        logger.warning("Assignment create failed: %s", ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
             detail='Object ASSIGNMENT was not accepted',
@@ -106,6 +130,15 @@ def update_assignment(
     """Update an existing assignment."""
     validate_transaction_access(db_session, current_user, op.OP_1010002.value)
 
+    logger.info(
+        "Update assignment id=%s user_id=%s role_id=%s by user=%s ip=%s",
+        assignment_id,
+        assignment.user_id,
+        assignment.role_id,
+        current_user.username,
+        get_client_ip(request),
+    )
+
     new_assignment: Assignment = Assignment(**assignment.model_dump())
     new_assignment.id = assignment_id
     new_assignment.audit_user_ip = get_client_ip(request)
@@ -113,7 +146,9 @@ def update_assignment(
 
     try:
         new_assignment = controller.update(db_session, new_assignment)
+        logger.info("Assignment updated id=%s", assignment_id)
     except IntegrityValidationException as ex:
+        logger.warning("Assignment update failed id=%s: %s", assignment_id, ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
             detail='Object ASSIGNMENT was not accepted',
@@ -133,9 +168,16 @@ def delete_assignment(
     """Delete an assignment."""
     validate_transaction_access(db_session, current_user, op.OP_1010004.value)
 
+    logger.info(
+        "Delete assignment id=%s by user=%s",
+        assignment_id,
+        current_user.username,
+    )
+
     try:
         controller.delete(db_session, assignment_id)
     except ObjectNotFoundException as ex:
+        logger.warning("Assignment delete failed id=%s: %s", assignment_id, ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_404_NOT_FOUND, detail=ex.args[0]
         ) from ex
