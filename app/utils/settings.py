@@ -25,8 +25,12 @@ class Settings(BaseSettings):
     # SECRETS
     SECURITY_API_SECRET_KEY: str
 
+    # Swagger
+    SWAGGER_DOCS_ROUTE: str = "/api/v1/docs"
+    SWAGGER_REDOCS_ROUTE: str = "/api/v1/redocs"
+
 
 @lru_cache
 def get_settings() -> Settings:
     """Get the application settings, cached for performance."""
-    return Settings()  # type: ignore[call-arg]
+    return Settings()

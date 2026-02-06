@@ -9,14 +9,15 @@ from app.api.authorization.router import router as authorization_router
 from app.api.role.router import router as role_router
 from app.api.transaction.router import router as transaction_router
 from app.api.user.router import router as user_router
+from app.utils.settings import get_settings
 
 app = FastAPI(
     title="FastAPI Starter faster than ever",
     description="FastAPI Starter",
     version="0.1.0",
     openapi_url="/api/v1/openapi.json",
-    docs_url="/api/v1/docs",
-    redoc_url="/api/v1/redoc",
+    docs_url=get_settings().SWAGGER_DOCS_ROUTE,
+    redoc_url=get_settings().SWAGGER_REDOCS_ROUTE,
     openapi_tags=[
         {
             "name": "Users",
