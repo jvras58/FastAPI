@@ -175,7 +175,7 @@ E para instacia-lo no VSCODE é recomendado as seguintes configurações:
 
 #### Docker Engine
 
-É obrigatório ter o Docker Engine já instalado e cunfigurado. Para mais informações de como instalar o Docker Engine em seu SO, ver em:
+É obrigatório ter o Docker Engine já instalado e configurado. Para mais informações de como instalar o Docker Engine em seu SO, ver em:
 
 - Instruções para instalação do Docker Engine: [Ver o link](https://docs.docker.com/engine/install/)
 
