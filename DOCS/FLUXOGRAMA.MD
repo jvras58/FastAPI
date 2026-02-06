@@ -16,7 +16,6 @@
 - **Transações**: `app.api.transaction.router` - `/transaction`
 - **Assignments**: `app.api.assignment.router` - `/assignment`
 - **Autorizações**: `app.api.authorization.router` - `/authorization`
-- **Processamento de Texto IA**: `app.api.text_processing.router` - `/text-processing`
 
 ## Nós de Decisão (Pontos de Ramificação)
 
@@ -50,7 +49,7 @@
 - **HTTP 409**: `ObjectConflitException`
 
 ### 3. **Persistência de Dados**
-- **Banco de Dados**: SQLite via database.db
+- **Banco de Dados**: SQLite via database.db para dev ou postgresql para prod
 - **Sessão**: `get_session`
 
 ## Agrupamentos Naturais
@@ -65,10 +64,6 @@ User ↔ Assignment ↔ Role ↔ Authorization ↔ Transaction
 - **Authorization**: `app.models.authorization.Authorization`
 - **Transaction**: `app.models.transaction.Transaction`
 
-### 2. **Sistema de Processamento de IA**
-- **Controlador**: `TextProcessingController`
-- **Modelo**: `ProcessedText`
-- **Integração**: CrewAI + LangChain para processamento de texto
 
 ### 3. **Camada de Auditoria**
 - **Base**: `AbstractBaseModel`
@@ -78,7 +73,6 @@ User ↔ Assignment ↔ Role ↔ Authorization ↔ Transaction
 - **Configuração**: alembic.ini
 - **Migrações**: 
   - `00292430c7bd_bigbang.py` - Estrutura inicial
-  - `6d421afaf99a_create_processed_data_table.py` - Tabela de dados processados
 
 ### 5. **Sistema de Seeds**
 - **Dados Iniciais**: `seed_transactions.py`, `seed_super_user.py`
