@@ -1,5 +1,5 @@
 """
-Configuração de logging para a aplicação.
+Log configuration for the application.
 """
 
 import logging
@@ -15,7 +15,7 @@ _logging_configured = False
 
 def setup_logging():
     """
-    Configura o sistema de logging com handlers para console e arquivo rotativo.
+    Configure the logging system with handlers for the console and a rotating file.
 
     Args:
         None
@@ -62,7 +62,7 @@ def setup_logging():
 
 def get_logger(name: str) -> logging.Logger:
     """
-    Retorna um logger com o nome especificado, configurando o logging se necessário.
+    Returns a logger with the specified name, configuring logging if necessary.
     """
     setup_logging()
     return logging.getLogger(name)
