@@ -2,9 +2,9 @@
 
 from typing import Annotated
 
+import jwt
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
 
 from app.api.authentication.schemas import TokenData
 from app.api.user.controller import UserController
@@ -49,23 +49,21 @@ def execute_user_login(db_session: SessionDep, username: str, password: str) -> 
     return {"access_token": token, "token_type": "bearer"}
 
 
-async def get_current_user(db_session: SessionDep, token: OAuth2Token) -> User:
-    """Get current user from JWT token."""
-    token_data = TokenData()
+async def get_current_user(dbsession: SessionDep, token: OAuth2Token) -> User:
+    tokendata = TokenData()
     try:
         username = extract_username(token)
         if not username:
             logger.warning("Token missing subject")
             raise CredentialsValidationException()
-
-        token_data.username = username
-    except JWTError as ex:
+        tokendata.username = username
+    except jwt.PyJWTError as ex:
         logger.warning("Token decode failed")
         raise CredentialsValidationException() from ex
 
-    db_user = user_controller.get_user_by_username(db_session, token_data.username)
+    db_user = user_controller.get_user_by_username(dbsession, tokendata.username)
 
     if db_user is None:
-        logger.warning("Token subject not found username=%s", token_data.username)
+        logger.warning("Token subject not found username=%s", tokendata.username)
         raise CredentialsValidationException()
     return db_user

@@ -1,16 +1,29 @@
-from jose import jwt
+import os
+
+import jwt
 
 from app.utils.security import create_access_token
+from app.utils.settings import get_settings
+
+os.environ.setdefault(
+    "SECURITY_API_SECRET_KEY",
+    "test_secret_key_with_32_bytes_minimum_1234",
+)
+get_settings.cache_clear()
 
 
 def test_jwt_token():
     data = {"test": "test"}
     token = create_access_token(data)
 
-    decoded = jwt.decode(token, "TESTE_SECRET", algorithms=["HS256"])
+    decoded = jwt.decode(
+        token,
+        get_settings().SECURITY_API_SECRET_KEY,
+        algorithms=[get_settings().SECURITY_ALGORITHM],
+    )
 
     assert decoded["test"] == data["test"]
-    assert decoded["exp"]  # Testa se o valor de exp foi adicionado ao token
+    assert decoded["exp"]
 
 
 def test_get_token(client, user):

@@ -2,8 +2,8 @@
 
 from datetime import UTC, datetime, timedelta
 
+import jwt
 from bcrypt import checkpw, gensalt, hashpw
-from jose import jwt
 
 from app.utils.settings import get_settings
 
@@ -56,4 +56,4 @@ def extract_username(jwt_token: str) -> str:
         get_settings().SECURITY_API_SECRET_KEY,
         algorithms=[get_settings().SECURITY_ALGORITHM],
     )
-    return payload.get("sub") or ""
+    return payload.get("sub") or None
