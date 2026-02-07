@@ -23,9 +23,11 @@ from app.utils.exceptions import (
     ObjectNotFoundException,
 )
 from app.utils.generic_controller import GenericController
+from app.utils.logging import get_logger
 
 router = APIRouter()
 controller = GenericController(Authorization)
+logger = get_logger('authorization.router')
 
 SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
@@ -44,6 +46,13 @@ def create_authorization(
 ):
     """Create a new authorization entry."""
     validate_transaction_access(db_session, current_user, op.OP_1020001.value)
+    logger.info(
+        'Create authorization role_id=%s transaction_id=%s by user=%s ip=%s',
+        authorization.role_id,
+        authorization.transaction_id,
+        current_user.username,
+        get_client_ip(request),
+    )
     new_authorization = Authorization(**authorization.model_dump())
 
     new_authorization.audit_user_ip = get_client_ip(request)
@@ -51,7 +60,9 @@ def create_authorization(
 
     try:
         new_authorization = controller.save(db_session, new_authorization)
+        logger.info('Authorization created id=%s', new_authorization.id)
     except IntegrityValidationException as ex:
+        logger.warning('Authorization create failed: %s', ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
             detail='Object AUTHORIZATION was not accepted',
@@ -73,6 +84,12 @@ def get_all_authorizations(
 ):
     """Get all authorizations with pagination."""
     validate_transaction_access(db_session, current_user, op.OP_1020003.value)
+    logger.info(
+        'List authorizations skip=%s limit=%s by user=%s',
+        skip,
+        limit,
+        current_user.username,
+    )
     authorizations = controller.get_all(db_session, skip, limit)
     return {'authorizations': authorizations}
 
@@ -87,10 +104,20 @@ def get_authorization_by_id(
 ):
     """Get authorization by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1020005.value)
+    logger.info(
+        'Fetch authorization id=%s by user=%s',
+        autorization_id,
+        current_user.username,
+    )
 
     try:
         authorization = controller.get(db_session, autorization_id)
     except ObjectNotFoundException as ex:
+        logger.warning(
+            'Authorization fetch failed id=%s: %s',
+            autorization_id,
+            ex.args[0],
+        )
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_404_NOT_FOUND,
             detail='Object AUTHORIZATION was not found',
@@ -109,10 +136,20 @@ def delete_authorization(
 ):
     """Delete an authorization by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1020004.value)
+    logger.info(
+        'Delete authorization id=%s by user=%s',
+        autorization_id,
+        current_user.username,
+    )
 
     try:
         controller.delete(db_session, autorization_id)
     except ObjectNotFoundException as ex:
+        logger.warning(
+            'Authorization delete failed id=%s: %s',
+            autorization_id,
+            ex.args[0],
+        )
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_404_NOT_FOUND,
             detail='Object AUTHORIZATION was not found',
@@ -136,6 +173,15 @@ def update_authorization(
     """Update an existing authorization."""
     validate_transaction_access(db_session, current_user, op.OP_1020002.value)
 
+    logger.info(
+        'Update authorization id=%s role_id=%s transaction_id=%s by user=%s ip=%s',
+        autorization_id,
+        authorization.role_id,
+        authorization.transaction_id,
+        current_user.username,
+        get_client_ip(request),
+    )
+
     new_authorization: Authorization = Authorization(
         **authorization.model_dump()
     )
@@ -144,8 +190,15 @@ def update_authorization(
     new_authorization.audit_user_login = current_user.username
 
     try:
-        return controller.update(db_session, new_authorization)
+        updated = controller.update(db_session, new_authorization)
+        logger.info('Authorization updated id=%s', autorization_id)
+        return updated
     except ObjectNotFoundException as ex:
+        logger.warning(
+            'Authorization update failed id=%s: %s',
+            autorization_id,
+            ex.args[0],
+        )
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_404_NOT_FOUND, detail=ex.args[0]
         ) from ex

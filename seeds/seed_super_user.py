@@ -44,7 +44,7 @@ def seed_super_user():
         # Check if admin_user and super_admin_role are valid
         if not admin_user or not super_admin_role:
             raise RuntimeError(
-                "Failed to create or retrieve administrator user or SUPER ADMIN role"
+                'Failed to create or retrieve administrator user or SUPER ADMIN role'
             )
 
         # 3. Insert assignment linking user to role

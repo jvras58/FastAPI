@@ -36,5 +36,3 @@ class EnumOperationCode(Enum):
     OP_1050003 = '1050003'   # Role - List
     OP_1050004 = '1050004'  # Role - Delete
     OP_1050005 = '1050005'  # Role - View
-    # --------------------- Text Processing - IA ---------------------
-    OP_2000001 = '2000001'  # Text Processing - Execute (CREATE)

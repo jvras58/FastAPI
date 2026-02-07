@@ -8,7 +8,6 @@ from app.utils.base_model import AbstractBaseModel
 
 if TYPE_CHECKING:
     from app.models.assignment import Assignment
-    from app.models.processed_text import ProcessedText
 
 
 class User(AbstractBaseModel):
@@ -25,9 +24,6 @@ class User(AbstractBaseModel):
     email: Mapped[str] = mapped_column(name='str_email')
 
     assignments: Mapped[list['Assignment']] = relationship(
-        back_populates='user', lazy='subquery'
-    )
-    processed_text_entries: Mapped[list['ProcessedText']] = relationship(
         back_populates='user', lazy='subquery'
     )
     __table_args__ = (
