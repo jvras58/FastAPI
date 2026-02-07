@@ -1,29 +1,32 @@
 name: CI
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+      POSTGRES_DB: fastapi
+      POSTGRES_USER: fastapi_user
+      POSTGRES_PASSWORD: fastapi_password
+      DB_URL: postgresql://fastapi_user:fastapi_password@postgres:5432/fastapi
+      SECURITY_ALGORITHM: HS256
+      SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      SWAGGER_DOCS_ROUTE: /docs
+      SWAGGER_REDOCS_ROUTE: /redoc
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: '3.11'
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-
+          version: "latest"
+      - name: Set up Python
+        run: uv python install 3.12
       - name: Install dependencies
-        run: |
-          poetry install
-
-      - name: Run tests with coverage
-        run: |
-          poetry run pytest --cov=app --cov-fail-under=80
+        run: uv sync --group dev
+      - name: Run tests
+        run: uv run pytest --cov=app --cov-report=term-missing
