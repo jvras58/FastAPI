@@ -1,5 +1,5 @@
 [project]
-name = "FastAPI"
+name = "FastAPI_-_Basic_-_CRUD_-_API"
 version = "1.0.0"
 description = "Basic CRUD API with FastAPI, SQLAlchemy, and Alembic"
 readme = "README.md"
