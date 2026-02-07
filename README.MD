@@ -40,12 +40,12 @@ Este projeto utiliza as seguintes tecnologias e ferramentas:
 - **Linguagem**: [Python 3.12](https://www.python.org/)
 - **Framework**: [FastAPI](https://fastapi.tiangolo.com/) - Framework web para construção de APIs.
 - **ORM**: [SQLAlchemy](https://www.sqlalchemy.org/) - Mapeamento objeto-relacional.
-- **Banco de Dados**: [SQLite](https://sqlite.org/) - Banco de dados leve e embarcado.
+- **Banco de Dados**: [SQLite](https://sqlite.org/) - Banco de dados leve e embarcado em dev.
 - **Gerenciador de Dependências**: [Uv Astral](https://docs.astral.sh/uv/) - Gerenciamento de dependências e ambientes virtuais.
 - **Migrações**: [Alembic](https://alembic.sqlalchemy.org/) - Gerenciamento de migrações de banco de dados.
 - **Testes**: [pytest](https://pytest.org/) com [pytest-cov](https://pytest-cov.readthedocs.io/) para cobertura de testes.
 - **Linting e Formatação**: [Ruff](https://github.com/charliermarsh/ruff), [Blue](https://blue.readthedocs.io/), e [isort](https://pycqa.github.io/isort/) para manter o código limpo.
-- **Autenticação**: [python-jose](https://github.com/mpdavis/python-jose) para JWT e [bcrypt](https://pypi.org/project/bcrypt/) para hash de senhas.
+- **Autenticação**: [PyJWT](https://pypi.org/project/PyJWT/) para JWT e [bcrypt](https://pypi.org/project/bcrypt/) para hash de senhas.
 
 ---
 
