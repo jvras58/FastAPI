@@ -10,15 +10,14 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file='.env',
-        env_file_encoding='utf-8',
-        secrets_dir='.secrets',
+        env_file=".env",
+        env_file_encoding="utf-8",
+        secrets_dir=".secrets",
         case_sensitive=True,
         env_ignore_empty=True,
     )
 
     DB_URL: str
-    GROQ_API_KEY: str
     SECURITY_ALGORITHM: str = 'HS256'
     SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 

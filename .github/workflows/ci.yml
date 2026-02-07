@@ -10,9 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      POSTGRES_DB: fastapi
-      POSTGRES_USER: fastapi_user
-      POSTGRES_PASSWORD: fastapi_password
       DB_URL: postgresql://fastapi_user:fastapi_password@postgres:5432/fastapi
       SECURITY_ALGORITHM: HS256
       SECURITY_ACCESS_TOKEN_EXPIRE_MINUTES: 30
