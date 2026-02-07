@@ -21,8 +21,6 @@ Este projeto é uma aplicação backend construída com **FastAPI**, projetada p
 
 ---
 
-Este projeto é uma aplicação backend construída com **FastAPI**, projetada para gerenciar usuários, papéis, permissões e transações em um sistema baseado em **Role-Based Access Control (RBAC)**. A API suporta autenticação via JWT, autorização granular, auditoria de ações e integração com um banco de dados usando SQLAlchemy como ORM.
-
 ### Funcionalidades Principais
 - **Autenticação**: Login de usuários com geração de tokens JWT.
 - **Autorização**: Controle de acesso baseado em papéis e permissões.
