@@ -1,4 +1,6 @@
 """Fixture and environment configurations for testing."""
+import os
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, event
@@ -25,6 +27,10 @@ from tests.factory.authorization_factory import (
 from tests.factory.role_factory import RoleFactory
 from tests.factory.trasaction_factory import TransactonFactory
 from tests.factory.user_factory import UserFactory
+
+# TODO: Desligar logs durante os testes, ou configurar para um nível mais alto
+os.environ.setdefault("LOG_LEVEL", "CRITICAL")
+os.environ.setdefault("LOG_CONSOLE_LEVEL", "CRITICAL")
 
 
 @pytest.fixture
