@@ -136,6 +136,12 @@ Para informações técnicas detalhadas sobre o projeto, consulte os documentos 
   - Pontos de saída (respostas e persistência)
   - Agrupamentos naturais do sistema
 
+### 📊 **Controlador Generico**
+- **Guia Completo**: [DOCS/GENERIC-CRUD.MD](DOCS/GENERIC-CRUD.MD) - Documentacao detalhada sobre:
+  - Como funciona o GenericController
+  - Como sobrescrever metodos para validacoes
+  - Exemplos praticos de customizacao (ex.: UserController)
+
 ### 🚀 **Deploy**
 - **Guia Completo**: [DOCS/DEPLOYMENT.md](DOCS/DEPLOYMENT.md) - Documentação detalhada sobre:
   - Configuração do ambiente de produção com Docker
