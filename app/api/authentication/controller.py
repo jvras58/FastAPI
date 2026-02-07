@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from jwt import PyJWTError
+from jose import JWTError
 
 from app.api.authentication.schemas import TokenData
 from app.api.user.controller import UserController
@@ -64,7 +64,7 @@ async def get_current_user(db_session: SessionDep, token: OAuth2Token) -> User:
             raise CredentialsValidationException()
 
         token_data.username = username
-    except PyJWTError as ex:
+    except JWTError as ex:
         logger.warning('Token decode failed')
         raise CredentialsValidationException() from ex
 
