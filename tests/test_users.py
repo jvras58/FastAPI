@@ -19,19 +19,19 @@ def test_create_user(session):
     # Dada uma Instancia de User com os dados abaixo é salva no banco de dados;
     new_user = UserFactory.build()
     new_user.id = None
-    new_user.username = 'user.test'
+    new_user.username = "user.test"
     session.add(new_user)
     session.commit()
 
     # WHEN ------
     # Quando executa-se uma busca com um fultro que aponta para o usuário anteriormente
     # salvo;
-    user = session.scalar(select(User).where(User.username == 'user.test'))
+    user = session.scalar(select(User).where(User.username == "user.test"))
 
     # THEN ------
     # Então uma instancia de User é retornada do banco de dados com os mesmos dados que
     # foi salvo anteriormente.
-    assert user.username == 'user.test'
+    assert user.username == "user.test"
     assert user.display_name == new_user.display_name
     assert user.email == new_user.email
     assert user.password == new_user.password
@@ -43,161 +43,155 @@ def test_create_user(session):
 
 def test_create_user_success(client):
     response = client.post(
-        '/users/',
+        "/users/",
         json={
-            'username': 'test',
-            'display_name': 'testuser test',
-            'email': 'testuser@test.com',
-            'password': 'Qwert123',
+            "username": "test",
+            "display_name": "testuser test",
+            "email": "testuser@test.com",
+            "password": "Qwert123",
         },
     )
 
     assert response.status_code == 201
-    assert response.json()['id']
-    assert response.json()['username'] == 'test'
-    assert response.json()['display_name'] == 'testuser test'
-    assert response.json()['email'] == 'testuser@test.com'
-    assert 'password' not in response.json()
+    assert response.json()["id"]
+    assert response.json()["username"] == "test"
+    assert response.json()["display_name"] == "testuser test"
+    assert response.json()["email"] == "testuser@test.com"
+    assert "password" not in response.json()
 
 
 def test_create_user_already_exists_fail(client, user):
 
     response = client.post(
-        '/users/',
+        "/users/",
         json={
-            'username': 'Teste',
-            'display_name': 'User Teste',
-            'email': 'teste@test.com',
-            'password': 'Qwert123',
+            "username": "Teste",
+            "display_name": "User Teste",
+            "email": "teste@test.com",
+            "password": "Qwert123",
         },
     )
 
     assert response.status_code == 400
-    assert response.json() == {'detail': 'Object USER was not accepted'}
+    assert response.json() == {"detail": "Object USER was not accepted"}
 
 
 def test_read_users(client, token):
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
-        response = client.get(
-            '/users/', headers={'Authorization': f'Bearer {token}'}
-        )
+        response = client.get("/users/", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
-    assert 'users' in response.json()
-    assert len(response.json()['users']) == 1
+    assert "users" in response.json()
+    assert len(response.json()["users"]) == 1
     assert mocked_access_validation.assert_called_once
 
 
 def test_get_user_by_id(client, user, token):
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
         response = client.get(
-            f'/users/{user.id}',
-            headers={'Authorization': f'Bearer {token}'},
+            f"/users/{user.id}",
+            headers={"Authorization": f"Bearer {token}"},
         )
         assert response.status_code == 200
-        assert response.json()['id'] == user.id
-        assert response.json()['username'] == user.username
-        assert response.json()['display_name'] == user.display_name
-        assert response.json()['email'] == user.email
-        assert 'password' not in response.json()
+        assert response.json()["id"] == user.id
+        assert response.json()["username"] == user.username
+        assert response.json()["display_name"] == user.display_name
+        assert response.json()["email"] == user.email
+        assert "password" not in response.json()
         assert mocked_access_validation.assert_called_once
 
 
 def test_read_users_with_users(client, user, token):
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
         user_schema = UserPublic.model_validate(user).model_dump()
-        response = client.get(
-            '/users/', headers={'Authorization': f'Bearer {token}'}
-        )
-    assert response.json() == {'users': [user_schema]}
+        response = client.get("/users/", headers={"Authorization": f"Bearer {token}"})
+    assert response.json() == {"users": [user_schema]}
     assert mocked_access_validation.assert_called_once
 
 
 def test_update_user_success(client, user, token):
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
         response = client.put(
-            f'/users/{user.id}',
-            headers={'Authorization': f'Bearer {token}'},
+            f"/users/{user.id}",
+            headers={"Authorization": f"Bearer {token}"},
             json={
-                'username': 'OutroUsuário',
-                'display_name': 'Outro Usuário',
-                'email': 'alterado@ufpe.br',
-                'password': 'SenhaMudada',
+                "username": "OutroUsuário",
+                "display_name": "Outro Usuário",
+                "email": "alterado@ufpe.br",
+                "password": "SenhaMudada",
             },
         )
 
     assert response.status_code == 200
-    assert response.json()['id'] == user.id
-    assert response.json()['username'] == 'OutroUsuário'
-    assert response.json()['display_name'] == 'Outro Usuário'
-    assert response.json()['email'] == 'alterado@ufpe.br'
-    assert 'password' not in response.json()
+    assert response.json()["id"] == user.id
+    assert response.json()["username"] == "OutroUsuário"
+    assert response.json()["display_name"] == "Outro Usuário"
+    assert response.json()["email"] == "alterado@ufpe.br"
+    assert "password" not in response.json()
     assert mocked_access_validation.assert_called_once
 
 
 def test_update_user_fail(client, user):
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
         response = client.put(
-            '/users/2',
+            "/users/2",
             json={
-                'username': 'OutroUsuário',
-                'email': 'alterado@ufpe.br',
-                'password': 'SenhaMudada',
+                "username": "OutroUsuário",
+                "email": "alterado@ufpe.br",
+                "password": "SenhaMudada",
             },
         )
 
     assert response.status_code == 401
-    assert response.json() == {'detail': 'Not authenticated'}
+    assert response.json() == {"detail": "Not authenticated"}
     assert mocked_access_validation.assert_called_once
 
 
 def test_delete_user_success(client, user, token):
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
         response = client.delete(
-            f'/users/{user.id}',
-            headers={'Authorization': f'Bearer {token}'},
+            f"/users/{user.id}",
+            headers={"Authorization": f"Bearer {token}"},
         )
 
     assert response.status_code == 200
-    assert response.json() == {'detail': 'User deleted'}
+    assert response.json() == {"detail": "User deleted"}
     assert mocked_access_validation.assert_called_once
 
 
 def test_delete_user_fail(client, user):
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
-        response = client.delete('/users/2')
+        response = client.delete("/users/2")
 
     assert response.status_code == 401
-    assert response.json() == {'detail': 'Not authenticated'}
+    assert response.json() == {"detail": "Not authenticated"}
     assert mocked_access_validation.assert_called_once
 
 
-def test_get_user_transactions(
-    client, user, token, role, transaction_10_plus_one
-):
+def test_get_user_transactions(client, user, token, role, transaction_10_plus_one):
     # SETUP
     with patch(
-        'app.api.assignment.router.validate_transaction_access'
+        "app.api.assignment.router.validate_transaction_access"
     ) as mocked_access_validation:
         response = client.post(
-            '/assignment/',
-            headers={'Authorization': f'Bearer {token}'},
+            "/assignment/",
+            headers={"Authorization": f"Bearer {token}"},
             json={
-                'role_id': role.id,
-                'user_id': user.id,
+                "role_id": role.id,
+                "user_id": user.id,
             },
         )
         assert response.status_code == 201
@@ -205,34 +199,34 @@ def test_get_user_transactions(
 
     transactions_ids: list[int] = []
     with patch(
-        'app.api.authorization.router.validate_transaction_access'
+        "app.api.authorization.router.validate_transaction_access"
     ) as mocked_access_validation:
 
         for transaction in transaction_10_plus_one[:4]:
 
             response = client.post(
-                '/authorization/',
-                headers={'Authorization': f'Bearer {token}'},
+                "/authorization/",
+                headers={"Authorization": f"Bearer {token}"},
                 json={
-                    'role_id': role.id,
-                    'transaction_id': transaction.id,
+                    "role_id": role.id,
+                    "transaction_id": transaction.id,
                 },
             )
             assert response.status_code == 201
-            transactions_ids.append(response.json()['transaction_id'])
+            transactions_ids.append(response.json()["transaction_id"])
             assert mocked_access_validation.assert_called_once
 
     # VERIFICATION TEST
     with patch(
-        'app.api.user.router.validate_transaction_access'
+        "app.api.user.router.validate_transaction_access"
     ) as mocked_access_validation:
         response = client.get(
-            f'/users/{user.id}/transactions',
-            headers={'Authorization': f'Bearer {token}'},
+            f"/users/{user.id}/transactions",
+            headers={"Authorization": f"Bearer {token}"},
         )
         assert mocked_access_validation.assert_called_once
         assert response.status_code == 200
-        assert 'transactions' in response.json()
-        assert len(response.json()['transactions']) == len(transactions_ids)
-        for transaction in response.json()['transactions']:
-            assert transaction['id'] in transactions_ids
+        assert "transactions" in response.json()
+        assert len(response.json()["transactions"]) == len(transactions_ids)
+        for transaction in response.json()["transactions"]:
+            assert transaction["id"] in transactions_ids

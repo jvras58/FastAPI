@@ -1,4 +1,5 @@
 """Controller for handling authorization logic."""
+
 from sqlalchemy import Select, and_, select
 
 from app.api.user.controller import UserController
@@ -16,7 +17,7 @@ from app.utils.exceptions import (
 from app.utils.logging import get_logger
 
 user_controller = UserController()
-logger = get_logger('authorization.controller')
+logger = get_logger("authorization.controller")
 
 
 def validate_transaction_access(
@@ -24,7 +25,7 @@ def validate_transaction_access(
 ) -> None:
     """Validate if the current user has access to the specified operation code."""
     if not current_user:
-        logger.warning('Access validation failed: missing current user')
+        logger.warning("Access validation failed: missing current user")
         raise CredentialsValidationException()
 
     transactions = get_user_authorized_transactions(
@@ -32,7 +33,7 @@ def validate_transaction_access(
     )
     if not transactions:
         logger.warning(
-            'Access denied user_id=%s op_code=%s',
+            "Access denied user_id=%s op_code=%s",
             current_user.id,
             op_code,
         )
@@ -40,7 +41,7 @@ def validate_transaction_access(
 
     if len(transactions) > 1:
         logger.warning(
-            'Access ambiguous user_id=%s op_code=%s count=%s',
+            "Access ambiguous user_id=%s op_code=%s count=%s",
             current_user.id,
             op_code,
             len(transactions),
@@ -49,17 +50,13 @@ def validate_transaction_access(
 
     if transactions[0].operation_code != op_code:
         logger.warning(
-            'Access mismatch user_id=%s expected=%s actual=%s',
+            "Access mismatch user_id=%s expected=%s actual=%s",
             current_user.id,
             op_code,
             transactions[0].operation_code,
         )
-        raise IllegalAccessException(
-            current_user.id, transactions[0].operation_code
-        )
-    logger.info(
-        'Access granted user_id=%s op_code=%s', current_user.id, op_code
-    )
+        raise IllegalAccessException(current_user.id, transactions[0].operation_code)
+    logger.info("Access granted user_id=%s op_code=%s", current_user.id, op_code)
 
 
 def get_user_authorized_transactions(
@@ -70,11 +67,7 @@ def get_user_authorized_transactions(
     optionally filtered by operation code.
     """
     query: Select = (
-        select(Transaction)
-        .join(Authorization)
-        .join(Role)
-        .join(Assignment)
-        .join(User)
+        select(Transaction).join(Authorization).join(Role).join(Assignment).join(User)
     )
 
     criteria_and = []
@@ -87,7 +80,7 @@ def get_user_authorized_transactions(
 
     transactions: list[Transaction] = list(db_session.scalars(query).all())
     logger.info(
-        'Authorized transactions user_id=%s op_code=%s count=%s',
+        "Authorized transactions user_id=%s op_code=%s count=%s",
         user_id,
         op_code,
         len(transactions),

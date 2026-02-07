@@ -1,4 +1,5 @@
 """Generic controller for CRUD operations."""
+
 from typing import Generic, TypeVar
 
 from sqlalchemy import String, and_, select
@@ -12,9 +13,9 @@ from app.utils.exceptions import (
     ObjectNotFoundException,
 )
 
-logger = get_logger('GenericController')
+logger = get_logger("GenericController")
 
-T = TypeVar('T', bound=AbstractBaseModel)
+T = TypeVar("T", bound=AbstractBaseModel)
 
 
 class GenericController(Generic[T]):
@@ -28,9 +29,7 @@ class GenericController(Generic[T]):
         """Get an object by its ID."""
         instance = db_session.get(self.model, obj_id)
         if not instance:
-            logger.warning(
-                f'Object {self.model.__name__} with ID {obj_id} not found.'
-            )
+            logger.warning(f"Object {self.model.__name__} with ID {obj_id} not found.")
             raise ObjectNotFoundException(self.model.__name__, str(obj_id))
         return instance
 
@@ -44,18 +43,14 @@ class GenericController(Generic[T]):
             for key, value in kwargs.items():
                 field = getattr(self.model, key)
                 if isinstance(field.property.columns[0].type, String):
-                    criteria_and.append(field.ilike(f'%{value}%'))
+                    criteria_and.append(field.ilike(f"%{value}%"))
                 else:
                     criteria_and.append(field == value)
 
             query = query.filter(and_(*criteria_and))
 
-        result = list(
-            db_session.scalars(query.offset(skip).limit(limit)).all()
-        )
-        logger.info(
-            f'Returned {len(result)} objects of type {self.model.__name__}.'
-        )
+        result = list(db_session.scalars(query.offset(skip).limit(limit)).all())
+        logger.info(f"Returned {len(result)} objects of type {self.model.__name__}.")
         return result
 
     def delete(self, db_session: Session, obj_id: int) -> None:
@@ -67,7 +62,7 @@ class GenericController(Generic[T]):
         db_session.delete(instance)
         db_session.commit()
         logger.info(
-            f'Object {self.model.__name__} with ID {obj_id} deleted successfully.'
+            f"Object {self.model.__name__} with ID {obj_id} deleted successfully."
         )
 
     def save(self, db_session: Session, obj: T) -> T:
@@ -76,22 +71,18 @@ class GenericController(Generic[T]):
             db_session.add(obj)
             db_session.commit()
             db_session.refresh(obj)
-            logger.info(f'Object {self.model.__name__} saved successfully.')
+            logger.info(f"Object {self.model.__name__} saved successfully.")
         except IntegrityError as exc:
             db_session.rollback()
-            logger.error(
-                f'Error saving object {self.model.__name__}: {exc.args[0]}'
-            )
+            logger.error(f"Error saving object {self.model.__name__}: {exc.args[0]}")
             raise IntegrityValidationException(exc.args[0]) from exc
         return obj
 
     def update(self, db_session: Session, obj: T) -> T:
         """Update an existing object in the database."""
-        obj_id = getattr(obj, 'id', None)
+        obj_id = getattr(obj, "id", None)
         if obj_id is None:
-            raise ValueError(
-                "Object must have an 'id' attribute for update operations"
-            )
+            raise ValueError("Object must have an 'id' attribute for update operations")
 
         instance = self.get(db_session, obj_id)
         if not instance:
@@ -103,13 +94,13 @@ class GenericController(Generic[T]):
         try:
             db_session.commit()
             logger.info(
-                f'Object {self.model.__name__} with ID {obj_id} updated successfully.'
+                f"Object {self.model.__name__} with ID {obj_id} updated successfully."
             )
         except IntegrityError as exc:
             db_session.rollback()
             logger.error(
-                f'Error updating object {self.model.__name__} '
-                f'with ID {obj_id}: {exc.args[0]}'
+                f"Error updating object {self.model.__name__} "
+                f"with ID {obj_id}: {exc.args[0]}"
             )
             raise IntegrityValidationException(exc.args[0]) from exc
 

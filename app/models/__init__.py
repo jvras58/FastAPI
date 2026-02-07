@@ -6,6 +6,7 @@ na inicialização do módulo inteiro do Models.
 
 Ref: https://stackoverflow.com/questions/9088957/sqlalchemy-cannot-find-a-class-name
 """
+
 from app.models.assignment import Assignment  # noqa F401
 from app.models.authorization import Authorization  # noqa F401
 from app.models.role import Role  # noqa F401

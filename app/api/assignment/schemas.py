@@ -1,4 +1,5 @@
 """Schemas for the Assignment entity."""
+
 from pydantic import BaseModel
 
 from app.utils.base_schemas import BaseAuditDTOSchema, BaseAuditModelSchema

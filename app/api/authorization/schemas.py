@@ -1,4 +1,5 @@
 """Authorization Schemas"""
+
 from pydantic import BaseModel
 
 from app.utils.base_schemas import BaseAuditDTOSchema, BaseAuditModelSchema

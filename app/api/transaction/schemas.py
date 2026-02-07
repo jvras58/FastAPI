@@ -1,4 +1,5 @@
 """Schemas for transaction API endpoints."""
+
 from pydantic import BaseModel
 
 from app.utils.base_schemas import BaseAuditDTOSchema, BaseAuditModelSchema

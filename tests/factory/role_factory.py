@@ -8,9 +8,7 @@ class RoleFactory(factory.Factory):
         model = Role
 
     id = factory.Sequence(lambda n: n)
-    name = factory.LazyAttribute(lambda obj: f'Role TEST{obj.id}')
-    description = factory.LazyAttribute(
-        lambda obj: f'Description TEST{obj.id}'
-    )
-    audit_user_ip = factory.Faker('ipv4')
-    audit_user_login = factory.Faker('user_name')
+    name = factory.LazyAttribute(lambda obj: f"Role TEST{obj.id}")
+    description = factory.LazyAttribute(lambda obj: f"Description TEST{obj.id}")
+    audit_user_ip = factory.Faker("ipv4")
+    audit_user_login = factory.Faker("user_name")

@@ -11,7 +11,6 @@ dependencies = [
     "psycopg2-binary>=2.9.0",
     "pydantic-settings>=2.10.1",
     "pydantic[email]>=2.11.9",
-    "pyjwt>=2.11.0",
     "python-jose[cryptography]>=3.5.0",
     "python-multipart>=0.0.20",
     "requests>=2.32.5",
@@ -23,7 +22,7 @@ where = ["app"]
 
 [dependency-groups]
 dev = [
-    "blue>=0.9.1",
+    "black>=24.8.0",
     "commitizen>=4.9.1",
     "factory-boy>=3.3.3",
     "httpx>=0.28.1",
@@ -35,8 +34,8 @@ dev = [
 ]
 # uv run (commands) sample = uv run pytest -s -x --cov=app -vv
 [tool.taskipy.tasks]
-lint = "ruff check . && blue --check . --diff"
-format = "blue . && isort ."
+lint = "ruff check . && black --check . --diff"
+format = "black . && isort ."
 run = "uvicorn app.startup:app --host 0.0.0.0 --port 8000 --reload"
 pre_test = "task lint"
 test = "pytest -s -x --cov=app -vv"

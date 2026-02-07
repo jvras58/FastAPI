@@ -1,4 +1,5 @@
 """Model for represents the User."""
+
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Index
@@ -15,18 +16,18 @@ class User(AbstractBaseModel):
     Represents the User (Usuário) table in the database.
     """
 
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
-    id: Mapped[int] = mapped_column(primary_key=True, name='id')
-    display_name: Mapped[str] = mapped_column(name='str_display_name')
-    username: Mapped[str] = mapped_column(name='str_username')
-    password: Mapped[str] = mapped_column(name='str_password')
-    email: Mapped[str] = mapped_column(name='str_email')
+    id: Mapped[int] = mapped_column(primary_key=True, name="id")
+    display_name: Mapped[str] = mapped_column(name="str_display_name")
+    username: Mapped[str] = mapped_column(name="str_username")
+    password: Mapped[str] = mapped_column(name="str_password")
+    email: Mapped[str] = mapped_column(name="str_email")
 
-    assignments: Mapped[list['Assignment']] = relationship(
-        back_populates='user', lazy='subquery'
+    assignments: Mapped[list["Assignment"]] = relationship(
+        back_populates="user", lazy="subquery"
     )
     __table_args__ = (
-        Index('idx_user_username', username, unique=True),
-        Index('idx_user_email', email, unique=True),
+        Index("idx_user_username", username, unique=True),
+        Index("idx_user_email", email, unique=True),
     )

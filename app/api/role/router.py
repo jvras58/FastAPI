@@ -1,4 +1,5 @@
 """Role management API routes."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -23,29 +24,25 @@ from app.utils.logging import get_logger
 
 router = APIRouter()
 role_controller = GenericController(Role)
-logger = get_logger('role.router')
+logger = get_logger("role.router")
 
 SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.get(
-    '/{role_id}',
+    "/{role_id}",
     status_code=HTTP_STATUS.HTTP_200_OK,
     response_model=RoleSchema,
 )
-def get_role_by_id(
-    role_id: int, db_session: SessionDep, current_user: CurrentUser
-):
+def get_role_by_id(role_id: int, db_session: SessionDep, current_user: CurrentUser):
     """Get role by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1050005.value)
-    logger.info('Fetch role id=%s by user=%s', role_id, current_user.username)
+    logger.info("Fetch role id=%s by user=%s", role_id, current_user.username)
     return role_controller.get(db_session, role_id)
 
 
-@router.get(
-    '/', status_code=HTTP_STATUS.HTTP_200_OK, response_model=RoleListSchema
-)
+@router.get("/", status_code=HTTP_STATUS.HTTP_200_OK, response_model=RoleListSchema)
 def get_all_roles(
     db_session: SessionDep,
     current_user: CurrentUser,
@@ -55,18 +52,16 @@ def get_all_roles(
     """Get all roles with pagination."""
     validate_transaction_access(db_session, current_user, op.OP_1050003.value)
     logger.info(
-        'List roles skip=%s limit=%s by user=%s',
+        "List roles skip=%s limit=%s by user=%s",
         skip,
         limit,
         current_user.username,
     )
     roles = role_controller.get_all(db_session, skip, limit)
-    return {'roles': roles}
+    return {"roles": roles}
 
 
-@router.post(
-    '/', status_code=HTTP_STATUS.HTTP_201_CREATED, response_model=RoleSchema
-)
+@router.post("/", status_code=HTTP_STATUS.HTTP_201_CREATED, response_model=RoleSchema)
 def create_role(
     role: RoleDTOSchema,
     db_session: SessionDep,
@@ -76,7 +71,7 @@ def create_role(
     """Create a new role."""
     validate_transaction_access(db_session, current_user, op.OP_1050001.value)
     logger.info(
-        'Create role name=%s by user=%s ip=%s',
+        "Create role name=%s by user=%s ip=%s",
         role.name,
         current_user.username,
         get_client_ip(request),
@@ -88,19 +83,19 @@ def create_role(
 
     try:
         new_role = role_controller.save(db_session, new_role)
-        logger.info('Role created id=%s', new_role.id)
+        logger.info("Role created id=%s", new_role.id)
     except IntegrityValidationException as ex:
-        logger.warning('Role create failed: %s', ex.args[0])
+        logger.warning("Role create failed: %s", ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
-            detail='Object ROLE was not accepted',
+            detail="Object ROLE was not accepted",
         ) from ex
 
     return new_role
 
 
 @router.put(
-    '/{role_id}',
+    "/{role_id}",
     status_code=HTTP_STATUS.HTTP_200_OK,
     response_model=RoleSchema,
 )
@@ -115,7 +110,7 @@ def update_role(
     validate_transaction_access(db_session, current_user, op.OP_1050002.value)
 
     logger.info(
-        'Update role id=%s name=%s by user=%s ip=%s',
+        "Update role id=%s name=%s by user=%s ip=%s",
         role_id,
         role.name,
         current_user.username,
@@ -129,17 +124,17 @@ def update_role(
 
     try:
         updated = role_controller.update(db_session, new_role)
-        logger.info('Role updated id=%s', role_id)
+        logger.info("Role updated id=%s", role_id)
         return updated
     except ObjectNotFoundException as ex:
-        logger.warning('Role update failed id=%s: %s', role_id, ex.args[0])
+        logger.warning("Role update failed id=%s: %s", role_id, ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_404_NOT_FOUND, detail=ex.args[0]
         ) from ex
 
 
 @router.delete(
-    '/{role_id}',
+    "/{role_id}",
     status_code=HTTP_STATUS.HTTP_200_OK,
     response_model=SimpleMessageSchema,
 )
@@ -151,15 +146,15 @@ def delete_role(
     """Delete a role by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1050004.value)
 
-    logger.info('Delete role id=%s by user=%s', role_id, current_user.username)
+    logger.info("Delete role id=%s by user=%s", role_id, current_user.username)
 
     try:
         role_controller.delete(db_session, role_id)
     except ObjectNotFoundException as ex:
-        logger.warning('Role delete failed id=%s: %s', role_id, ex.args[0])
+        logger.warning("Role delete failed id=%s: %s", role_id, ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_404_NOT_FOUND,
             detail=ex.args[0],
         ) from ex
 
-    return {'detail': 'Role deleted successfully'}
+    return {"detail": "Role deleted successfully"}

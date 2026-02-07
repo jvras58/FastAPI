@@ -1,4 +1,5 @@
 """User-related API routes and operations."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -26,56 +27,52 @@ from app.utils.logging import get_logger
 
 router = APIRouter()
 user_controller = UserController()
-logger = get_logger('user.router')
+logger = get_logger("user.router")
 
 DbSession = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
-@router.post('/', status_code=201, response_model=UserPublic)
-async def create_new_user(
-    user: UserSchema, request: Request, session: DbSession
-):
+@router.post("/", status_code=201, response_model=UserPublic)
+async def create_new_user(user: UserSchema, request: Request, session: DbSession):
     """Create a new user."""
     logger.info(
-        'Create user username=%s email=%s ip=%s',
+        "Create user username=%s email=%s ip=%s",
         user.username,
         user.email,
         get_client_ip(request),
     )
     new_user: User = User(**user.model_dump())
     new_user.audit_user_ip = get_client_ip(request)
-    new_user.audit_user_login = 'system'
+    new_user.audit_user_login = "system"
 
     try:
         created = user_controller.save(session, new_user)
-        logger.info('User created id=%s', created.id)
+        logger.info("User created id=%s", created.id)
         return created
     except IntegrityValidationException as ex:
-        logger.warning('User create failed: %s', ex.args[0])
+        logger.warning("User create failed: %s", ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
-            detail='Object USER was not accepted',
+            detail="Object USER was not accepted",
         ) from ex
 
 
 @router.get(
-    '/{user_id}',
+    "/{user_id}",
     status_code=HTTP_STATUS.HTTP_200_OK,
     response_model=UserPublic,
 )
-def get_user_by_id(
-    user_id: int, db_session: DbSession, current_user: CurrentUser
-):
+def get_user_by_id(user_id: int, db_session: DbSession, current_user: CurrentUser):
     """Get user by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1040005.value)
 
-    logger.info('Fetch user id=%s by user=%s', user_id, current_user.username)
+    logger.info("Fetch user id=%s by user=%s", user_id, current_user.username)
 
     return user_controller.get(db_session, user_id)
 
 
-@router.get('/', response_model=UserList)
+@router.get("/", response_model=UserList)
 def read_users(
     db_session: DbSession,
     current_user: CurrentUser,
@@ -85,16 +82,16 @@ def read_users(
     """Retrieve all users with pagination."""
     validate_transaction_access(db_session, current_user, op.OP_1040003.value)
     logger.info(
-        'List users skip=%s limit=%s by user=%s',
+        "List users skip=%s limit=%s by user=%s",
         skip,
         limit,
         current_user.username,
     )
     users: list[User] = user_controller.get_all(db_session, skip, limit)
-    return {'users': users}
+    return {"users": users}
 
 
-@router.put('/{user_id}', response_model=UserPublic)
+@router.put("/{user_id}", response_model=UserPublic)
 def update_existing_user(
     user_id: int,
     user: UserSchema,
@@ -106,7 +103,7 @@ def update_existing_user(
     validate_transaction_access(db_session, current_user, op.OP_1040002.value)
 
     logger.info(
-        'Update user id=%s username=%s by user=%s ip=%s',
+        "Update user id=%s username=%s by user=%s ip=%s",
         user_id,
         user.username,
         current_user.username,
@@ -121,14 +118,14 @@ def update_existing_user(
         new_user.audit_user_login = current_user.username
 
         updated = user_controller.update(db_session, new_user)
-        logger.info('User updated id=%s', user_id)
+        logger.info("User updated id=%s", user_id)
         return updated
     except ObjectNotFoundException as ex:
-        logger.warning('User update failed id=%s: %s', user_id, ex.args[0])
+        logger.warning("User update failed id=%s: %s", user_id, ex.args[0])
         raise HTTPException(status_code=404, detail=ex.args[0]) from ex
 
 
-@router.delete('/{user_id}', response_model=SimpleMessageSchema)
+@router.delete("/{user_id}", response_model=SimpleMessageSchema)
 def delete_existing_user(
     user_id: int,
     db_session: DbSession,
@@ -137,18 +134,18 @@ def delete_existing_user(
     """Delete a user by ID."""
     validate_transaction_access(db_session, current_user, op.OP_1040004.value)
 
-    logger.info('Delete user id=%s by user=%s', user_id, current_user.username)
+    logger.info("Delete user id=%s by user=%s", user_id, current_user.username)
 
     try:
         user_controller.delete(db_session, user_id)
     except ObjectNotFoundException as ex:
-        logger.warning('User delete failed id=%s: %s', user_id, ex.args[0])
+        logger.warning("User delete failed id=%s: %s", user_id, ex.args[0])
         raise HTTPException(status_code=404, detail=ex.args[0]) from ex
 
-    return {'detail': 'User deleted'}
+    return {"detail": "User deleted"}
 
 
-@router.get('/{user_id}/transactions', response_model=TransactionListSchema)
+@router.get("/{user_id}/transactions", response_model=TransactionListSchema)
 def get_user_transactions(
     user_id: int,
     db_session: DbSession,
@@ -157,10 +154,8 @@ def get_user_transactions(
     """Get transactions authorized for a specific user."""
     validate_transaction_access(db_session, current_user, op.OP_1040006.value)
     logger.info(
-        'Fetch user transactions user_id=%s by user=%s',
+        "Fetch user transactions user_id=%s by user=%s",
         user_id,
         current_user.username,
     )
-    return {
-        'transactions': get_user_authorized_transactions(db_session, user_id)
-    }
+    return {"transactions": get_user_authorized_transactions(db_session, user_id)}

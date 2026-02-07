@@ -1,4 +1,5 @@
 """Model for Assignment (Designações) of users to roles."""
+
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Index
@@ -17,21 +18,17 @@ class Assignment(AbstractBaseModel):
     These assignments determine which role (Role) the user assumes in the system.
     """
 
-    __tablename__ = 'assignment'
+    __tablename__ = "assignment"
 
-    id: Mapped[int] = mapped_column(primary_key=True, name='id')
+    id: Mapped[int] = mapped_column(primary_key=True, name="id")
     user_id: Mapped[int] = mapped_column(
-        ForeignKey('user.id'), name='user_id', nullable=False
+        ForeignKey("user.id"), name="user_id", nullable=False
     )
     role_id: Mapped[int] = mapped_column(
-        ForeignKey('role.id'), name='role_id', nullable=False
+        ForeignKey("role.id"), name="role_id", nullable=False
     )
 
-    user: Mapped['User'] = relationship(
-        back_populates='assignments', lazy='subquery'
-    )
-    role: Mapped['Role'] = relationship(
-        back_populates='assignments', lazy='subquery'
-    )
+    user: Mapped["User"] = relationship(back_populates="assignments", lazy="subquery")
+    role: Mapped["Role"] = relationship(back_populates="assignments", lazy="subquery")
 
-    __table_args__ = (Index('idx_user_role', user_id, role_id, unique=True),)
+    __table_args__ = (Index("idx_user_role", user_id, role_id, unique=True),)

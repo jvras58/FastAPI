@@ -1,4 +1,5 @@
 """Fixture and environment configurations for testing."""
+
 import os
 
 import pytest
@@ -63,8 +64,8 @@ def session():
         Session: A SQLAlchemy Session instance
     """
     engine = create_engine(
-        'sqlite:///:memory:',
-        connect_args={'check_same_thread': False},
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
         poolclass=StaticPool,
         # echo=True,
     )
@@ -75,7 +76,7 @@ def session():
     Base.metadata.drop_all(engine)
 
 
-@event.listens_for(Engine, 'connect')
+@event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, _connection_record):
     """
     Defines the foreign keys pragma for SQLite database connections.
@@ -85,7 +86,7 @@ def set_sqlite_pragma(dbapi_connection, _connection_record):
         _connection_record: The connection record object.
     """
     cursor = dbapi_connection.cursor()
-    cursor.execute('PRAGMA foreign_keys=ON')
+    cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
 
 
@@ -100,14 +101,14 @@ def user(session):
     Returns:
         User: A User instance from the system.
     """
-    clr_password = 'testtest'
+    clr_password = "testtest"
     user = User(
-        username='Teste',
-        display_name='User Teste',
-        email='teste@test.com',
+        username="Teste",
+        display_name="User Teste",
+        email="teste@test.com",
         password=get_password_hash(clr_password),
-        audit_user_ip='0.0.0.0',
-        audit_user_login='tester',
+        audit_user_ip="0.0.0.0",
+        audit_user_login="tester",
     )
     session.add(user)
     session.commit()
@@ -128,14 +129,14 @@ def other_user(session):
     Returns:
         User: A User instance from the system.
     """
-    clr_password = 'Qwert123'
+    clr_password = "Qwert123"
     user = User(
-        username='TesteOutro',
-        email='teste_outro@test.com',
-        display_name='User Teste Outro',
+        username="TesteOutro",
+        email="teste_outro@test.com",
+        display_name="User Teste Outro",
         password=get_password_hash(clr_password),
-        audit_user_ip='0.0.0.0',
-        audit_user_login='tester',
+        audit_user_ip="0.0.0.0",
+        audit_user_login="tester",
     )
     session.add(user)
     session.commit()
@@ -161,10 +162,10 @@ def user_10(session):
 @pytest.fixture
 def token(client, user):
     response = client.post(
-        '/auth/token',
-        data={'username': user.username, 'password': user.clear_password},
+        "/auth/token",
+        data={"username": user.username, "password": user.clear_password},
     )
-    return response.json()['access_token']
+    return response.json()["access_token"]
 
 
 @pytest.fixture
@@ -203,11 +204,11 @@ def transaction_10_plus_one(session):
     session.commit()
 
     trans_test666 = Transaction(
-        name='Transação TEST666',
-        description='Descrição TEST666',
-        operation_code='TEST666',
-        audit_user_ip='localhost',
-        audit_user_login='tester',
+        name="Transação TEST666",
+        description="Descrição TEST666",
+        operation_code="TEST666",
+        audit_user_ip="localhost",
+        audit_user_login="tester",
     )
 
     session.add(trans_test666)
@@ -234,10 +235,10 @@ def role(session):
     Creates a role in the database.
     """
     new_role = Role(
-        name='ROLE_TEST',
-        description='ROLE_TEST',
-        audit_user_ip='localhost',
-        audit_user_login='tester',
+        name="ROLE_TEST",
+        description="ROLE_TEST",
+        audit_user_ip="localhost",
+        audit_user_login="tester",
     )
     session.add(new_role)
     session.commit()

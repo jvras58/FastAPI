@@ -1,4 +1,5 @@
 """Authentication router module."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -17,19 +18,15 @@ SessionDep = Annotated[Session, Depends(get_session)]
 OAuth2Form = Annotated[OAuth2PasswordRequestForm, Depends()]
 
 
-@router.post('/token', response_model=AccessToken)
-def login_for_access_token(
-    form_data: OAuth2Form, db_session: SessionDep
-) -> dict:
+@router.post("/token", response_model=AccessToken)
+def login_for_access_token(form_data: OAuth2Form, db_session: SessionDep) -> dict:
     """Endpoint to obtain JWT token."""
     try:
-        logger.info('Login attempt for username=%s', form_data.username)
-        return execute_user_login(
-            db_session, form_data.username, form_data.password
-        )
+        logger.info("Login attempt for username=%s", form_data.username)
+        return execute_user_login(db_session, form_data.username, form_data.password)
     except IncorrectCredentialException as ex:
         logger.warning(
-            'Login failed for username=%s: %s',
+            "Login failed for username=%s: %s",
             form_data.username,
             ex.args[0],
         )

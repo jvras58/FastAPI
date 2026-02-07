@@ -10,8 +10,8 @@ class AssignmentFactory(factory.Factory):
         model = Assignment
 
     id = factory.Sequence(lambda n: n)
-    audit_user_ip = factory.Faker('ipv4')
-    audit_user_login = factory.Faker('user_name')
+    audit_user_ip = factory.Faker("ipv4")
+    audit_user_login = factory.Faker("user_name")
 
     user = factory.SubFactory(UserFactory)
     role = factory.SubFactory(RoleFactory)

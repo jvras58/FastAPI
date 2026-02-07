@@ -1,4 +1,5 @@
 """Custom exceptions for the application."""
+
 from fastapi import HTTPException, status
 
 
@@ -10,8 +11,8 @@ class CredentialsValidationException(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Could not validate credentials',
-            headers={'WWW-Authenticate': 'Bearer'},
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 
@@ -21,7 +22,7 @@ class IncorrectCredentialException(Exception):
     """
 
     def __init__(self):
-        super().__init__('Incorrect email or password')
+        super().__init__("Incorrect email or password")
 
 
 class ObjectAlreadyExistException(Exception):
@@ -30,7 +31,7 @@ class ObjectAlreadyExistException(Exception):
     """
 
     def __init__(self, obj_type: str, obj_id: str):
-        super().__init__(f'Object {obj_type} already exist with id [{obj_id}]')
+        super().__init__(f"Object {obj_type} already exist with id [{obj_id}]")
 
 
 class ObjectNotFoundException(Exception):
@@ -39,7 +40,7 @@ class ObjectNotFoundException(Exception):
     """
 
     def __init__(self, obj_type: str, obj_id: str):
-        super().__init__(f'{obj_type} with ID [{obj_id}] not found')
+        super().__init__(f"{obj_type} with ID [{obj_id}] not found")
 
 
 class ValueRequiredException(Exception):
@@ -48,7 +49,7 @@ class ValueRequiredException(Exception):
     """
 
     def __init__(self, field_name: str):
-        super().__init__(f'{field_name} cannot be null')
+        super().__init__(f"{field_name} cannot be null")
 
 
 class IntegrityValidationException(Exception):
@@ -68,8 +69,8 @@ class IllegalAccessException(HTTPException):
     def __init__(self, user_id: int, op_code: str):
         super().__init__(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User[{user_id}] not authorized to access Transaction[{op_code}]',
-            headers={'WWW-Authenticate': 'Bearer'},
+            detail=f"User[{user_id}] not authorized to access Transaction[{op_code}]",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 
@@ -80,13 +81,13 @@ class AmbiguousAuthorizationException(HTTPException):
 
     def __init__(self, user_id: int, op_code: str):
         msg = (
-            f'Found more than one authorization for User[{user_id}] '
-            f'and Transaction[{op_code}]'
+            f"Found more than one authorization for User[{user_id}] "
+            f"and Transaction[{op_code}]"
         )
         super().__init__(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=msg,
-            headers={'WWW-Authenticate': 'Bearer'},
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 
@@ -96,6 +97,4 @@ class ObjectConflitException(Exception):
     """
 
     def __init__(self, obj_type: str, obj_id: str):
-        super().__init__(
-            f'{obj_type} with ID [{obj_id}] conflict availability'
-        )
+        super().__init__(f"{obj_type} with ID [{obj_id}] conflict availability")

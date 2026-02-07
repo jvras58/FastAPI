@@ -10,8 +10,8 @@ class AuthorizationFactory(factory.Factory):
         model = Authorization
 
     id = factory.Sequence(lambda n: n)
-    audit_user_ip = factory.Faker('ipv4')
-    audit_user_login = factory.Faker('user_name')
+    audit_user_ip = factory.Faker("ipv4")
+    audit_user_login = factory.Faker("user_name")
 
     role = factory.SubFactory(RoleFactory)
     transaction = factory.SubFactory(TransactonFactory)

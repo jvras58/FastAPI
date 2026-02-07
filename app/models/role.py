@@ -1,4 +1,5 @@
 """Model for Role (Perfil de usuário)."""
+
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Index
@@ -16,17 +17,17 @@ class Role(AbstractBaseModel):
     Represents the Role (Perfil de usuário) table.
     """
 
-    __tablename__ = 'role'
+    __tablename__ = "role"
 
-    id: Mapped[int] = mapped_column(primary_key=True, name='id')
-    name: Mapped[str] = mapped_column(name='str_name')
-    description: Mapped[str] = mapped_column(name='str_description')
+    id: Mapped[int] = mapped_column(primary_key=True, name="id")
+    name: Mapped[str] = mapped_column(name="str_name")
+    description: Mapped[str] = mapped_column(name="str_description")
 
-    assignments: Mapped[list['Assignment']] = relationship(
-        back_populates='role', lazy='subquery'
+    assignments: Mapped[list["Assignment"]] = relationship(
+        back_populates="role", lazy="subquery"
     )
-    authorizations: Mapped[list['Authorization']] = relationship(
-        back_populates='role', lazy='subquery'
+    authorizations: Mapped[list["Authorization"]] = relationship(
+        back_populates="role", lazy="subquery"
     )
 
-    __table_args__ = (Index('idx_role_name', name, unique=True),)
+    __table_args__ = (Index("idx_role_name", name, unique=True),)

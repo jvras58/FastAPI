@@ -1,4 +1,5 @@
 """Base schemas for the system."""
+
 from datetime import datetime
 
 from pydantic import BaseModel

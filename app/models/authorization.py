@@ -1,4 +1,5 @@
 """Model for authorization of a role (Role) to a transaction."""
+
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Index
@@ -17,21 +18,21 @@ class Authorization(AbstractBaseModel):
     in the system.
     """
 
-    __tablename__ = 'authorization'
+    __tablename__ = "authorization"
 
-    id: Mapped[int] = mapped_column(primary_key=True, name='id')
-    role_id: Mapped[int] = mapped_column(ForeignKey('role.id'), nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, name="id")
+    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"), nullable=False)
     transaction_id: Mapped[int] = mapped_column(
-        ForeignKey('transaction.id'), nullable=False
+        ForeignKey("transaction.id"), nullable=False
     )
 
-    role: Mapped['Role'] = relationship(
-        back_populates='authorizations', lazy='subquery'
+    role: Mapped["Role"] = relationship(
+        back_populates="authorizations", lazy="subquery"
     )
-    transaction: Mapped['Transaction'] = relationship(
-        back_populates='authorizations', lazy='subquery'
+    transaction: Mapped["Transaction"] = relationship(
+        back_populates="authorizations", lazy="subquery"
     )
 
     __table_args__ = (
-        Index('idx_role_transaction', role_id, transaction_id, unique=True),
+        Index("idx_role_transaction", role_id, transaction_id, unique=True),
     )
