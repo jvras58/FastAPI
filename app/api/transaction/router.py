@@ -27,7 +27,7 @@ from app.utils.logging import get_logger
 
 router = APIRouter()
 transaction_controller = GenericController(Transaction)
-logger = get_logger("transaction.router")
+logger = get_logger('transaction.router')
 
 SessionDep = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
@@ -47,7 +47,7 @@ async def create_transaction(
     """Create a new transaction."""
     validate_transaction_access(db_session, current_user, op.OP_1030001.value)
     logger.info(
-        "Create transaction op_code=%s by user=%s ip=%s",
+        'Create transaction op_code=%s by user=%s ip=%s',
         transaction.operation_code,
         current_user.username,
         get_client_ip(request),
@@ -61,9 +61,9 @@ async def create_transaction(
         new_transaction = transaction_controller.save(
             db_session, new_transaction
         )
-        logger.info("Transaction created id=%s", new_transaction.id)
+        logger.info('Transaction created id=%s', new_transaction.id)
     except IntegrityValidationException as ex:
-        logger.warning("Transaction create failed: %s", ex.args[0])
+        logger.warning('Transaction create failed: %s', ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
             detail='Object TRANSACTION was not accepted',
@@ -86,7 +86,7 @@ async def get_all_transactions(
     """Get all transactions with optional filtering by operation code."""
     validate_transaction_access(db_session, current_user, op.OP_1030003.value)
     logger.info(
-        "List transactions skip=%s limit=%s op_code=%s by user=%s",
+        'List transactions skip=%s limit=%s op_code=%s by user=%s',
         skip,
         limit,
         op_code,
@@ -114,7 +114,7 @@ def get_transaction_by_id(
     validate_transaction_access(db_session, current_user, op.OP_1030005.value)
 
     logger.info(
-        "Fetch transaction id=%s by user=%s",
+        'Fetch transaction id=%s by user=%s',
         transaction_id,
         current_user.username,
     )
@@ -138,7 +138,7 @@ async def update_transaction(
     validate_transaction_access(db_session, current_user, op.OP_1030002.value)
 
     logger.info(
-        "Update transaction id=%s op_code=%s by user=%s ip=%s",
+        'Update transaction id=%s op_code=%s by user=%s ip=%s',
         transaction_id,
         transaction.operation_code,
         current_user.username,
@@ -152,11 +152,11 @@ async def update_transaction(
 
     try:
         updated = transaction_controller.update(db_session, new_transaction)
-        logger.info("Transaction updated id=%s", transaction_id)
+        logger.info('Transaction updated id=%s', transaction_id)
         return updated
     except ObjectNotFoundException as ex:
         logger.warning(
-            "Transaction update failed id=%s: %s",
+            'Transaction update failed id=%s: %s',
             transaction_id,
             ex.args[0],
         )
@@ -175,7 +175,7 @@ def delete_existing_transaction(
     validate_transaction_access(db_session, current_user, op.OP_1030004.value)
 
     logger.info(
-        "Delete transaction id=%s by user=%s",
+        'Delete transaction id=%s by user=%s',
         transaction_id,
         current_user.username,
     )
@@ -184,7 +184,7 @@ def delete_existing_transaction(
         transaction_controller.delete(db_session, transaction_id)
     except ObjectNotFoundException as ex:
         logger.warning(
-            "Transaction delete failed id=%s: %s",
+            'Transaction delete failed id=%s: %s',
             transaction_id,
             ex.args[0],
         )

@@ -45,7 +45,7 @@ def get_assignment_by_id(
     validate_transaction_access(db_session, current_user, op.OP_1010005.value)
 
     logger.info(
-        "Fetch assignment id=%s by user=%s",
+        'Fetch assignment id=%s by user=%s',
         assignment_id,
         current_user.username,
     )
@@ -67,7 +67,7 @@ def get_all_assignments(
     """Get all assignments with pagination."""
     validate_transaction_access(db_session, current_user, op.OP_1010003.value)
     logger.info(
-        "List assignments skip=%s limit=%s by user=%s",
+        'List assignments skip=%s limit=%s by user=%s',
         skip,
         limit,
         current_user.username,
@@ -91,7 +91,7 @@ def create_assignment(
     validate_transaction_access(db_session, current_user, op.OP_1010001.value)
 
     logger.info(
-        "Create assignment for user_id=%s role_id=%s by user=%s ip=%s",
+        'Create assignment for user_id=%s role_id=%s by user=%s ip=%s',
         assignment.user_id,
         assignment.role_id,
         current_user.username,
@@ -104,9 +104,9 @@ def create_assignment(
 
     try:
         new_assignment = controller.save(db_session, new_assignment)
-        logger.info("Assignment created id=%s", new_assignment.id)
+        logger.info('Assignment created id=%s', new_assignment.id)
     except IntegrityValidationException as ex:
-        logger.warning("Assignment create failed: %s", ex.args[0])
+        logger.warning('Assignment create failed: %s', ex.args[0])
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
             detail='Object ASSIGNMENT was not accepted',
@@ -131,7 +131,7 @@ def update_assignment(
     validate_transaction_access(db_session, current_user, op.OP_1010002.value)
 
     logger.info(
-        "Update assignment id=%s user_id=%s role_id=%s by user=%s ip=%s",
+        'Update assignment id=%s user_id=%s role_id=%s by user=%s ip=%s',
         assignment_id,
         assignment.user_id,
         assignment.role_id,
@@ -146,9 +146,11 @@ def update_assignment(
 
     try:
         new_assignment = controller.update(db_session, new_assignment)
-        logger.info("Assignment updated id=%s", assignment_id)
+        logger.info('Assignment updated id=%s', assignment_id)
     except IntegrityValidationException as ex:
-        logger.warning("Assignment update failed id=%s: %s", assignment_id, ex.args[0])
+        logger.warning(
+            'Assignment update failed id=%s: %s', assignment_id, ex.args[0]
+        )
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_400_BAD_REQUEST,
             detail='Object ASSIGNMENT was not accepted',
@@ -169,7 +171,7 @@ def delete_assignment(
     validate_transaction_access(db_session, current_user, op.OP_1010004.value)
 
     logger.info(
-        "Delete assignment id=%s by user=%s",
+        'Delete assignment id=%s by user=%s',
         assignment_id,
         current_user.username,
     )
@@ -177,7 +179,9 @@ def delete_assignment(
     try:
         controller.delete(db_session, assignment_id)
     except ObjectNotFoundException as ex:
-        logger.warning("Assignment delete failed id=%s: %s", assignment_id, ex.args[0])
+        logger.warning(
+            'Assignment delete failed id=%s: %s', assignment_id, ex.args[0]
+        )
         raise HTTPException(
             status_code=HTTP_STATUS.HTTP_404_NOT_FOUND, detail=ex.args[0]
         ) from ex

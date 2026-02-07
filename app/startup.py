@@ -15,36 +15,36 @@ from app.utils.settings import get_settings
 setup_logging()
 
 app = FastAPI(
-    title="FastAPI Starter faster than ever",
-    description="FastAPI Starter",
-    version="0.1.0",
-    openapi_url="/api/v1/openapi.json",
+    title='FastAPI Starter faster than ever',
+    description='FastAPI Starter',
+    version='0.1.0',
+    openapi_url='/api/v1/openapi.json',
     docs_url=get_settings().SWAGGER_DOCS_ROUTE,
     redoc_url=get_settings().SWAGGER_REDOCS_ROUTE,
     openapi_tags=[
         {
-            "name": "Users",
-            "description": "Operations with users",
+            'name': 'Users',
+            'description': 'Operations with users',
         },
         {
-            "name": "Auth",
-            "description": "Operations with authentication",
+            'name': 'Auth',
+            'description': 'Operations with authentication',
         },
         {
-            "name": "Transactions",
-            "description": "Operations with transactions",
+            'name': 'Transactions',
+            'description': 'Operations with transactions',
         },
         {
-            "name": "Roles",
-            "description": "Operations with roles",
+            'name': 'Roles',
+            'description': 'Operations with roles',
         },
         {
-            "name": "Assignments",
-            "description": "Operations with assignments",
+            'name': 'Assignments',
+            'description': 'Operations with assignments',
         },
         {
-            "name": "Authorizations",
-            "description": "Operations with authorizations",
+            'name': 'Authorizations',
+            'description': 'Operations with authorizations',
         },
     ],
 )
@@ -82,7 +82,7 @@ app.include_router(
     assignment_router, prefix='/assignment', tags=['Assignments']
 )
 app.include_router(
-    authorization_router, prefix="/authorization", tags=["Authorizations"]
+    authorization_router, prefix='/authorization', tags=['Authorizations']
 )
 # ----------------------------------
 

@@ -33,7 +33,7 @@ def setup_logging():
     logger.setLevel(getattr(logging, get_settings().LOG_LEVEL, logging.INFO))
 
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
 
     console_handler = logging.StreamHandler()
@@ -47,7 +47,7 @@ def setup_logging():
         get_settings().LOG_FILE,
         maxBytes=get_settings().LOG_MAX_BYTES,
         backupCount=get_settings().LOG_BACKUP_COUNT,
-        encoding="utf-8",
+        encoding='utf-8',
     )
     file_handler.setFormatter(formatter)
     file_handler.setLevel(
@@ -55,7 +55,7 @@ def setup_logging():
     )
     logger.addHandler(file_handler)
 
-    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger('httpx').setLevel(logging.WARNING)
 
     _logging_configured = True
 

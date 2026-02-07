@@ -23,13 +23,13 @@ def login_for_access_token(
 ) -> dict:
     """Endpoint to obtain JWT token."""
     try:
-        logger.info("Login attempt for username=%s", form_data.username)
+        logger.info('Login attempt for username=%s', form_data.username)
         return execute_user_login(
             db_session, form_data.username, form_data.password
         )
     except IncorrectCredentialException as ex:
         logger.warning(
-            "Login failed for username=%s: %s",
+            'Login failed for username=%s: %s',
             form_data.username,
             ex.args[0],
         )

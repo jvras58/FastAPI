@@ -23,8 +23,8 @@ class User(AbstractBaseModel):
     password: Mapped[str] = mapped_column(name='str_password')
     email: Mapped[str] = mapped_column(name='str_email')
 
-    assignments: Mapped[list["Assignment"]] = relationship(
-        back_populates="user", lazy="subquery"
+    assignments: Mapped[list['Assignment']] = relationship(
+        back_populates='user', lazy='subquery'
     )
     __table_args__ = (
         Index('idx_user_username', username, unique=True),
