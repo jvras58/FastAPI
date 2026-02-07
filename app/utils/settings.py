@@ -10,9 +10,9 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        secrets_dir=".secrets",
+        env_file='.env',
+        env_file_encoding='utf-8',
+        secrets_dir='.secrets',
         case_sensitive=True,
         env_ignore_empty=True,
     )
